@@ -1,0 +1,137 @@
+For a B2B2C IPTV SaaS, the smartest path is to release in carefully planned versions, each delivering real business value while laying the foundation for the next.
+
+Version 1.0 — Core MVP
+
+The goal here is simple: launch your first paying tenant.
+
+Target Customers
+Small IPTV resellers
+Local broadcasters
+Niche content providers
+Features
+Platform Core
+Multi-tenant architecture
+Tenant registration
+Tenant login
+Role management
+Streaming
+Live TV channels
+M3U playlist support
+Basic HLS playback
+Channel categories
+End User
+Registration
+Login
+Watch live channels
+Favorite channels
+Tenant Admin
+Manage channels
+Manage subscribers
+Basic dashboard
+Billing
+Subscription plans
+Stripe integration
+Trial period
+White Label
+Logo upload
+Primary colors
+Custom domain
+
+
+Version 1.5 — Business Ready
+
+Now you move from "working" to "sellable."
+
+New Features
+Electronic Program Guide (EPG)
+Video On Demand
+Password reset
+Email notifications
+Usage analytics
+Device management
+Stream concurrency limits
+Improvements
+Better UI/UX
+Improved player performance
+CDN integration
+Admin activity logs
+
+
+Version 2.0 — Growth Platform
+
+This is where you become truly competitive.
+
+Reseller Features
+Sub-reseller management
+Commission tracking
+Hierarchical permissions
+Advanced Billing
+Multiple payment gateways
+Coupons
+Tax support
+Invoicing
+Streaming Enhancements
+Catch-up TV
+DVR
+Adaptive bitrate streaming
+Security
+JWT refresh tokens
+IP restrictions
+Geo-blocking
+Device limits
+
+
+Version 2.5 — Enterprise Expansion
+
+Large customers start paying attention.
+
+Enterprise Features
+API access
+SSO (OAuth/SAML)
+Audit logs
+Advanced reporting
+SLA monitoring
+Operations
+Automated backups
+Disaster recovery
+Tenant resource quotas
+
+
+Version 3.0 — Premium OTT Platform
+
+Now you're competing seriously.
+
+Premium Features
+Native mobile apps
+Smart TV apps
+AI recommendations
+Personalized homepages
+Push notifications
+Advertising
+Pre-roll ads
+Mid-roll ads
+Ad analytics
+
+
+Version 3.5 — Global Scale
+
+For international growth.
+
+Global Features
+Multi-language
+Multi-currency
+Regional pricing
+Local payment gateways
+CDN routing optimization
+
+
+Version 4.0 — Ecosystem Platform
+
+This transforms you from software to platform.
+
+Platform Features
+Public API marketplace
+Plugin system
+Third-party integrations
+Webhooks
+Partner portal

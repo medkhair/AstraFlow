@@ -1,0 +1,155 @@
+CLIENT SCREEN STRUCTURE
+
+━━━━━━━━━━━━━━━━━━
+HOME
+━━━━━━━━━━━━━━━━━━
+
+FEATURED / TRENDING
+-> Live Now
+-> Popular Today
+-> Editor’s Picks
+-> Recently Added
+-> Recommended For You
+
+━━━━━━━━━━━━━━━━━━
+EVENTS (Live & Special Content)
+━━━━━━━━━━━━━━━━━━
+
+SPORTS
+-> Football
+-> Basketball
+-> Tennis
+-> UFC / MMA
+-> Formula 1
+-> Cricket
+-> Live Matches
+-> Upcoming Matches
+
+EMISSIONS (TV Shows / Programs)
+-> Talk Shows
+-> Reality Shows
+-> Morning Shows
+-> News Programs
+-> Game Shows
+
+LIVE CONCERTS
+PREMIERES
+RELIGIOUS EVENTS
+ESPORTS
+BREAKING NEWS
+
+━━━━━━━━━━━━━━━━━━
+CHANNELS
+━━━━━━━━━━━━━━━━━━
+
+SPORTS
+-> International Sports Channels
+-> Local Sports Channels
+-> 24/7 Sports News
+
+INTERNATIONAL
+-> US Channels
+-> UK Channels
+-> French Channels
+-> German Channels
+-> Turkish Channels
+
+ARABIC CHANNELS
+-> Arabic News
+-> Arabic Movies
+-> Arabic Series
+-> Gulf Channels
+-> North Africa Channels
+
+KIDS
+-> Cartoons
+-> Educational
+-> Teen Channels
+-> Anime
+
+MOVIES
+-> Action
+-> Comedy
+-> Drama
+-> Horror
+-> Romance
+-> Sci-Fi
+
+SERIES
+-> Trending Series
+-> Turkish Series
+-> Arabic Series
+-> International Series
+
+NEWS
+-> International News
+-> Business News
+-> Political News
+-> Local News
+
+MUSIC
+-> Pop
+-> Arabic Music
+-> Classic
+-> DJ / Electronic
+
+DOCUMENTARIES
+-> History
+-> Nature
+-> Science
+-> Technology
+
+GAMING
+-> Esports
+-> Live Gaming Streams
+
+RELIGION
+-> Islamic Channels
+-> Christian Channels
+-> Spiritual Programs
+
+━━━━━━━━━━━━━━━━━━
+VOD (Video On Demand)
+━━━━━━━━━━━━━━━━━━
+
+-> Newly Added
+-> Top Rated
+-> Trending
+-> Continue Watching
+-> My List
+-> By Genre
+-> By Country
+-> By Language
+
+━━━━━━━━━━━━━━━━━━
+CATCH-UP TV
+━━━━━━━━━━━━━━━━━━
+
+-> Last 24 Hours
+-> Last 7 Days
+-> Recordings
+-> Scheduled Recordings
+
+━━━━━━━━━━━━━━━━━━
+MY SPACE
+━━━━━━━━━━━━━━━━━━
+
+-> Favorites
+-> Watch History
+-> Downloads (if supported)
+-> Subscription Info
+-> Devices
+-> Parental Control
+
+━━━━━━━━━━━━━━━━━━
+SETTINGS
+━━━━━━━━━━━━━━━━━━
+
+-> Profile
+-> Language
+-> Video Quality (Auto / 1080p / 720p)
+-> Subtitles
+-> Audio Tracks
+-> Parental Lock
+-> Device Management
+-> Logout
