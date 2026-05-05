@@ -1,0 +1,21 @@
+1. Platform (Owner)
+	Manage tenants
+	View global analytics
+	Manage platform pricing
+	Monitor system health
+	Handle escalated support
+
+2. Tenant (Admin)
+	Manage channels
+	Import M3U
+	Manage subscribers
+	Create plans
+	Configure branding
+	View revenue dashboard
+
+3. End User (Client)
+	Register / Login
+	Watch live TV
+	Manage subscription
+	Favorites
+	Profile settings
