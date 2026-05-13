@@ -1,0 +1,65 @@
+package com.astraflow.project.controller;
+
+import com.astraflow.project.model.Subscription;
+import com.astraflow.project.model.enums.SubscriptionStatus;
+import com.astraflow.project.service.SubscriptionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/v1/subscriptions")
+@RequiredArgsConstructor
+public class SubscriptionController {
+
+    private final SubscriptionService subscriptionService;
+
+    @GetMapping
+    public ResponseEntity<List<Subscription>> findAll() {
+        return ResponseEntity.ok(subscriptionService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Subscription> findById(@PathVariable UUID id) {
+        return subscriptionService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<Subscription>> findByClientId(@PathVariable UUID clientId) {
+        return ResponseEntity.ok(subscriptionService.findByClientId(clientId));
+    }
+
+    @GetMapping("/client/{clientId}/active")
+    public ResponseEntity<Subscription> findActiveByClientId(@PathVariable UUID clientId) {
+        return subscriptionService.findActiveByClientId(clientId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Subscription>> findByStatus(@PathVariable SubscriptionStatus status) {
+        return ResponseEntity.ok(subscriptionService.findByStatus(status));
+    }
+
+    @PostMapping
+    public ResponseEntity<Subscription> create(@RequestBody Subscription subscription) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionService.save(subscription));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Subscription> update(@PathVariable UUID id, @RequestBody Subscription subscription) {
+        return ResponseEntity.ok(subscriptionService.update(id, subscription));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        subscriptionService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+}

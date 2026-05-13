@@ -1,0 +1,62 @@
+package com.astraflow.project.service.impl;
+
+import com.astraflow.project.model.Admin;
+import com.astraflow.project.repository.AdminRepository;
+import com.astraflow.project.service.AdminService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class AdminServiceImpl implements AdminService {
+
+    private final AdminRepository adminRepository;
+
+    @Override
+    public List<Admin> findAll() {
+        return adminRepository.findAll();
+    }
+
+    @Override
+    public Optional<Admin> findById(UUID id) {
+        return adminRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Admin> findByEmail(String email) {
+        return adminRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<Admin> findByTenantId(UUID tenantId) {
+        return adminRepository.findByTenantId(tenantId);
+    }
+
+    @Override
+    @Transactional
+    public Admin save(Admin admin) {
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    @Transactional
+    public Admin update(UUID id, Admin admin) {
+        adminRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Admin not found with id: " + id));
+        admin.setId(id);
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(UUID id) {
+        adminRepository.deleteById(id);
+    }
+}

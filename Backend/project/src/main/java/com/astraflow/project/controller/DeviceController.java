@@ -1,0 +1,59 @@
+package com.astraflow.project.controller;
+
+import com.astraflow.project.model.Device;
+import com.astraflow.project.service.DeviceService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/v1/devices")
+@RequiredArgsConstructor
+public class DeviceController {
+
+    private final DeviceService deviceService;
+
+    @GetMapping
+    public ResponseEntity<List<Device>> findAll() {
+        return ResponseEntity.ok(deviceService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Device> findById(@PathVariable UUID id) {
+        return deviceService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<Device>> findByClientId(@PathVariable UUID clientId) {
+        return ResponseEntity.ok(deviceService.findByClientId(clientId));
+    }
+
+    @GetMapping("/device-id/{deviceId}")
+    public ResponseEntity<Device> findByDeviceId(@PathVariable String deviceId) {
+        return deviceService.findByDeviceId(deviceId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Device> create(@RequestBody Device device) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(deviceService.save(device));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Device> update(@PathVariable UUID id, @RequestBody Device device) {
+        return ResponseEntity.ok(deviceService.update(id, device));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        deviceService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+}
