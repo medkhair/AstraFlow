@@ -2,7 +2,7 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.ChannelCategory;
 import com.astraflow.project.service.ChannelCategoryService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/channel-categories")
-@RequiredArgsConstructor
 public class ChannelCategoryController {
 
-    private final ChannelCategoryService channelCategoryService;
+    @Autowired
+    private ChannelCategoryService channelCategoryService;
 
     @GetMapping
     public ResponseEntity<List<ChannelCategory>> findAll() {

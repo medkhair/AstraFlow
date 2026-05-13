@@ -3,7 +3,7 @@ package com.astraflow.project.controller;
 import com.astraflow.project.model.Payment;
 import com.astraflow.project.model.enums.PaymentStatus;
 import com.astraflow.project.service.PaymentService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/payments")
-@RequiredArgsConstructor
 public class PaymentController {
 
-    private final PaymentService paymentService;
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping
     public ResponseEntity<List<Payment>> findAll() {

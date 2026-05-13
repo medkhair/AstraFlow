@@ -3,7 +3,7 @@ package com.astraflow.project.controller;
 import com.astraflow.project.model.Tenant;
 import com.astraflow.project.model.enums.TenantStatus;
 import com.astraflow.project.service.TenantService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/tenants")
-@RequiredArgsConstructor
 public class TenantController {
 
-    private final TenantService tenantService;
+    @Autowired
+    private TenantService tenantService;
 
     @GetMapping
     public ResponseEntity<List<Tenant>> findAll() {

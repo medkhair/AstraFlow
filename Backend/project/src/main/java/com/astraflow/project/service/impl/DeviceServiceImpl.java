@@ -4,7 +4,7 @@ import com.astraflow.project.model.Device;
 import com.astraflow.project.repository.DeviceRepository;
 import com.astraflow.project.service.DeviceService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DeviceServiceImpl implements DeviceService {
 
-    private final DeviceRepository deviceRepository;
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Override
     public List<Device> findAll() {

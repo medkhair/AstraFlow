@@ -6,7 +6,7 @@ import com.astraflow.project.model.enums.TicketStatus;
 import com.astraflow.project.repository.SupportTicketRepository;
 import com.astraflow.project.service.SupportTicketService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +15,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SupportTicketServiceImpl implements SupportTicketService {
 
-    private final SupportTicketRepository supportTicketRepository;
+    @Autowired
+    private SupportTicketRepository supportTicketRepository;
 
     @Override
     public List<SupportTicket> findAll() {

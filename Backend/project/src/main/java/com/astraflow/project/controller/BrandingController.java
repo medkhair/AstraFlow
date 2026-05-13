@@ -2,7 +2,7 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.Branding;
 import com.astraflow.project.service.BrandingService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/brandings")
-@RequiredArgsConstructor
 public class BrandingController {
 
-    private final BrandingService brandingService;
+    @Autowired
+    private BrandingService brandingService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Branding> findById(@PathVariable UUID id) {

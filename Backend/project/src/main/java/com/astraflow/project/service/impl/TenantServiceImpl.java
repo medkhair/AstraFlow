@@ -5,7 +5,7 @@ import com.astraflow.project.model.enums.TenantStatus;
 import com.astraflow.project.repository.TenantRepository;
 import com.astraflow.project.service.TenantService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TenantServiceImpl implements TenantService {
 
-    private final TenantRepository tenantRepository;
+    @Autowired
+    private TenantRepository tenantRepository;
 
     @Override
     public List<Tenant> findAll() {

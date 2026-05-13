@@ -2,7 +2,7 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.AuditLog;
 import com.astraflow.project.service.AuditLogService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,10 +15,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/audit-logs")
-@RequiredArgsConstructor
 public class AuditLogController {
 
-    private final AuditLogService auditLogService;
+    @Autowired
+    private AuditLogService auditLogService;
 
     @GetMapping("/{id}")
     public ResponseEntity<AuditLog> findById(@PathVariable UUID id) {

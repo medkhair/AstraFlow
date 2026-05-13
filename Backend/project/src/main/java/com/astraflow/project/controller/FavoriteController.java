@@ -2,7 +2,7 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.Favorite;
 import com.astraflow.project.service.FavoriteService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/favorites")
-@RequiredArgsConstructor
 public class FavoriteController {
 
-    private final FavoriteService favoriteService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<Favorite>> findByClientId(@PathVariable UUID clientId) {

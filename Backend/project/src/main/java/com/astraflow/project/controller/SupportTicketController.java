@@ -4,7 +4,7 @@ import com.astraflow.project.model.SupportTicket;
 import com.astraflow.project.model.enums.TicketPriority;
 import com.astraflow.project.model.enums.TicketStatus;
 import com.astraflow.project.service.SupportTicketService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/support-tickets")
-@RequiredArgsConstructor
 public class SupportTicketController {
 
-    private final SupportTicketService supportTicketService;
+    @Autowired
+    private SupportTicketService supportTicketService;
 
     @GetMapping
     public ResponseEntity<List<SupportTicket>> findAll() {

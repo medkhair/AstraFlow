@@ -4,7 +4,7 @@ import com.astraflow.project.model.Branding;
 import com.astraflow.project.repository.BrandingRepository;
 import com.astraflow.project.service.BrandingService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BrandingServiceImpl implements BrandingService {
 
-    private final BrandingRepository brandingRepository;
+    @Autowired
+    private BrandingRepository brandingRepository;
 
     @Override
     public Optional<Branding> findById(UUID id) {

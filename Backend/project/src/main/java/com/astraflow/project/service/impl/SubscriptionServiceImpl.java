@@ -5,7 +5,7 @@ import com.astraflow.project.model.enums.SubscriptionStatus;
 import com.astraflow.project.repository.SubscriptionRepository;
 import com.astraflow.project.service.SubscriptionService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-    private final SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     @Override
     public List<Subscription> findAll() {

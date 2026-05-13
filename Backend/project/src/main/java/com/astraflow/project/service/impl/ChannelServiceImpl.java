@@ -5,7 +5,7 @@ import com.astraflow.project.model.enums.ChannelStatus;
 import com.astraflow.project.repository.ChannelRepository;
 import com.astraflow.project.service.ChannelService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ChannelServiceImpl implements ChannelService {
 
-    private final ChannelRepository channelRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
 
     @Override
     public List<Channel> findAll() {

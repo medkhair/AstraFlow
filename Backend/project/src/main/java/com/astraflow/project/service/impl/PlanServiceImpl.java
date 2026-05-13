@@ -5,7 +5,7 @@ import com.astraflow.project.model.enums.PlanType;
 import com.astraflow.project.repository.PlanRepository;
 import com.astraflow.project.service.PlanService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PlanServiceImpl implements PlanService {
 
-    private final PlanRepository planRepository;
+    @Autowired
+    private PlanRepository planRepository;
 
     @Override
     public List<Plan> findAll() {

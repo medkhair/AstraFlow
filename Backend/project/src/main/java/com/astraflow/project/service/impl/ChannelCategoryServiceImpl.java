@@ -4,7 +4,7 @@ import com.astraflow.project.model.ChannelCategory;
 import com.astraflow.project.repository.ChannelCategoryRepository;
 import com.astraflow.project.service.ChannelCategoryService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ChannelCategoryServiceImpl implements ChannelCategoryService {
 
-    private final ChannelCategoryRepository channelCategoryRepository;
+    @Autowired
+    private ChannelCategoryRepository channelCategoryRepository;
 
     @Override
     public List<ChannelCategory> findAll() {

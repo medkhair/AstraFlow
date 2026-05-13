@@ -72,4 +72,112 @@ public class Tenant {
     @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY)
     @Builder.Default
     private List<SupportTicket> supportTickets = new ArrayList<>();
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSubdomain() {
+		return subdomain;
+	}
+
+	public void setSubdomain(String subdomain) {
+		this.subdomain = subdomain;
+	}
+
+	public String getCustomDomain() {
+		return customDomain;
+	}
+
+	public void setCustomDomain(String customDomain) {
+		this.customDomain = customDomain;
+	}
+
+	public TenantStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TenantStatus status) {
+		this.status = status;
+	}
+
+	public String getTimezone() {
+		return timezone;
+	}
+
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Branding getBranding() {
+		return branding;
+	}
+
+	public void setBranding(Branding branding) {
+		this.branding = branding;
+	}
+
+	public List<Channel> getChannels() {
+		return channels;
+	}
+
+	public void setChannels(List<Channel> channels) {
+		this.channels = channels;
+	}
+
+	public List<Plan> getPlans() {
+		return plans;
+	}
+
+	public void setPlans(List<Plan> plans) {
+		this.plans = plans;
+	}
+
+	public List<SupportTicket> getSupportTickets() {
+		return supportTickets;
+	}
+
+	public void setSupportTickets(List<SupportTicket> supportTickets) {
+		this.supportTickets = supportTickets;
+	}
+    
+    
+    
+    
 }

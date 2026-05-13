@@ -2,7 +2,7 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.Owner;
 import com.astraflow.project.service.OwnerService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/owners")
-@RequiredArgsConstructor
 public class OwnerController {
 
-    private final OwnerService ownerService;
+    @Autowired
+    private OwnerService ownerService;
 
     @GetMapping
     public ResponseEntity<List<Owner>> findAll() {

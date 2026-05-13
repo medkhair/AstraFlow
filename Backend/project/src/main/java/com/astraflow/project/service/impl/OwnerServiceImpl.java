@@ -4,7 +4,7 @@ import com.astraflow.project.model.Owner;
 import com.astraflow.project.repository.OwnerRepository;
 import com.astraflow.project.service.OwnerService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OwnerServiceImpl implements OwnerService {
 
-    private final OwnerRepository ownerRepository;
+    @Autowired
+    private OwnerRepository ownerRepository;
 
     @Override
     public List<Owner> findAll() {

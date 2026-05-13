@@ -3,7 +3,7 @@ package com.astraflow.project.controller;
 import com.astraflow.project.model.Subscription;
 import com.astraflow.project.model.enums.SubscriptionStatus;
 import com.astraflow.project.service.SubscriptionService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/subscriptions")
-@RequiredArgsConstructor
 public class SubscriptionController {
 
-    private final SubscriptionService subscriptionService;
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     @GetMapping
     public ResponseEntity<List<Subscription>> findAll() {

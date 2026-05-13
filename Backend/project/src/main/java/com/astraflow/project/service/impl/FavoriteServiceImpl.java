@@ -3,7 +3,7 @@ package com.astraflow.project.service.impl;
 import com.astraflow.project.model.Favorite;
 import com.astraflow.project.repository.FavoriteRepository;
 import com.astraflow.project.service.FavoriteService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FavoriteServiceImpl implements FavoriteService {
 
-    private final FavoriteRepository favoriteRepository;
+    @Autowired
+    private FavoriteRepository favoriteRepository;
 
     @Override
     public List<Favorite> findByClientId(UUID clientId) {

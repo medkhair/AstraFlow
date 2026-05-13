@@ -3,7 +3,7 @@ package com.astraflow.project.controller;
 import com.astraflow.project.model.Plan;
 import com.astraflow.project.model.enums.PlanType;
 import com.astraflow.project.service.PlanService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/plans")
-@RequiredArgsConstructor
 public class PlanController {
 
-    private final PlanService planService;
+    @Autowired
+    private PlanService planService;
 
     @GetMapping
     public ResponseEntity<List<Plan>> findAll() {

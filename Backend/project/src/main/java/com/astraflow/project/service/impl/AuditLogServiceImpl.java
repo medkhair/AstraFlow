@@ -3,7 +3,7 @@ package com.astraflow.project.service.impl;
 import com.astraflow.project.model.AuditLog;
 import com.astraflow.project.repository.AuditLogRepository;
 import com.astraflow.project.service.AuditLogService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuditLogServiceImpl implements AuditLogService {
 
-    private final AuditLogRepository auditLogRepository;
+    @Autowired
+    private AuditLogRepository auditLogRepository;
 
     @Override
     public Page<AuditLog> findByTenantId(UUID tenantId, Pageable pageable) {

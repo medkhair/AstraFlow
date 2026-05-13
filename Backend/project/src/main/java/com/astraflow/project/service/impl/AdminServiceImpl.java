@@ -4,20 +4,22 @@ import com.astraflow.project.model.Admin;
 import com.astraflow.project.repository.AdminRepository;
 import com.astraflow.project.service.AdminService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AdminServiceImpl implements AdminService {
 
-    private final AdminRepository adminRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     @Override
     public List<Admin> findAll() {

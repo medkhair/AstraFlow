@@ -2,7 +2,7 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.Device;
 import com.astraflow.project.service.DeviceService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/devices")
-@RequiredArgsConstructor
 public class DeviceController {
 
-    private final DeviceService deviceService;
+    @Autowired
+    private DeviceService deviceService;
 
     @GetMapping
     public ResponseEntity<List<Device>> findAll() {

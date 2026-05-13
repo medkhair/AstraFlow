@@ -3,7 +3,7 @@ package com.astraflow.project.controller;
 import com.astraflow.project.model.Channel;
 import com.astraflow.project.model.enums.ChannelStatus;
 import com.astraflow.project.service.ChannelService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/channels")
-@RequiredArgsConstructor
 public class ChannelController {
 
-    private final ChannelService channelService;
+    @Autowired
+    private ChannelService channelService;
 
     @GetMapping
     public ResponseEntity<List<Channel>> findAll() {
