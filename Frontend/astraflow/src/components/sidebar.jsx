@@ -1,27 +1,27 @@
 import { Link, useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import {
-  Home,
-  MessageCircle,
-  BarChart3,
-  Shield,
-  TabletSmartphone,
+  LayoutDashboard,
+  Tv,
+  Users,
+  CreditCard,
+  Headphones,
+  DollarSign,
   UserRound,
-  LogIn,
-  LogOut,
+  Settings,
   ChevronFirst,
   ChevronLast,
 } from "lucide-react"
 
 const items = [
-  { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
-  { href: "/statistics", label: "Statistics", icon: BarChart3 },
-  { href: "/security", label: "Security", icon: Shield },
-  { href: "/devices", label: "Devices", icon: TabletSmartphone },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/channels", label: "Channels", icon: Tv },
+  { href: "/clients", label: "Clients", icon: Users },
+  { href: "/plans", label: "Plans", icon: CreditCard },
+  { href: "/tickets", label: "Support", icon: Headphones },
+  { href: "/payments", label: "Payments", icon: DollarSign },
   { href: "/profile", label: "Profile", icon: UserRound },
-  { href: "/signin", label: "Signin", icon: LogIn },
-  { href: "/signup", label: "Signup", icon: LogOut },
+  { href: "/settings", label: "Settings", icon: Settings },
 ]
 
 export function Sidebar({ onClose }) {
@@ -46,8 +46,8 @@ export function Sidebar({ onClose }) {
     >
       <div className="flex items-center justify-between gap-2 px-4 py-5">
         <div className="flex items-center gap-2">
-          <div className="size-9 rounded-xl bg-white/20 grid place-items-center font-bold">SH</div>
-          <span className={`${open ? "block" : "hidden"} text-sm font-semibold`}>Smart Home</span>
+          <div className="size-9 rounded-xl bg-white/20 grid place-items-center font-bold text-sm">AF</div>
+          <span className={`${open ? "block" : "hidden"} text-sm font-semibold`}>AstraFlow</span>
         </div>
         <button
           aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
@@ -85,7 +85,7 @@ export function Sidebar({ onClose }) {
 
       <div className="px-3 pb-5 pt-2">
         <div className="rounded-2xl bg-white/10 p-3">
-          <p className="text-xs leading-5">{open ? "Control your home with ease." : "Tip"}</p>
+          <p className="text-xs leading-5">{open ? "AstraFlow Admin Panel" : "AF"}</p>
         </div>
       </div>
     </aside>

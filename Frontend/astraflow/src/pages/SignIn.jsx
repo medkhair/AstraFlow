@@ -8,8 +8,8 @@ export default function SignInPage() {
   return (
     <main className="min-h-[80dvh] flex items-center justify-center p-6">
       <div className="w-full max-w-sm rounded-2xl bg-card p-6 ring-1 ring-border">
-        <h1 className="text-2xl font-semibold text-foreground mb-2">Sign in</h1>
-        <p className="text-sm text-muted-foreground mb-6">Welcome back. Enter your credentials.</p>
+        <h1 className="text-2xl font-semibold text-foreground mb-2">Admin Sign In</h1>
+        <p className="text-sm text-muted-foreground mb-6">Welcome back. Sign in to your AstraFlow admin panel.</p>
         <form className="grid gap-4">
           <label className="grid gap-2">
             <span className="text-sm text-muted-foreground">Email</span>

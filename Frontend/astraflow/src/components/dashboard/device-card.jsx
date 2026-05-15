@@ -1,27 +1,24 @@
-import { ToggleSwitch } from "@/components/ui/toggle-switch"
-import { useState } from "react"
-import { Monitor, Snowflake, Waves, Wind } from "lucide-react"
+import { Tv, Users, CreditCard, Headphones, TrendingUp } from "lucide-react"
 
 const IconMap = {
-  pc: Monitor,
-  fridge: Snowflake,
-  washer: Waves,
-  ac: Wind,
+  tv: Tv,
+  users: Users,
+  creditcard: CreditCard,
+  support: Headphones,
+  revenue: TrendingUp,
 }
 
-export function DeviceCard({ title, icon = "pc" }) {
-  const [on, setOn] = useState(false)
-  const Icon = IconMap[icon]
+export function DeviceCard({ title, value, subtitle, icon = "tv", trend }) {
+  const Icon = IconMap[icon] || Tv
   return (
-    <div className="rounded-2xl bg-card p-4 shadow-sm ring-1 ring-border">
-      <div className="mb-2 flex items-center justify-between">
-        <h4 className="text-xs font-semibold text-foreground">{title}</h4>
-        <span className="text-[10px] text-muted-foreground">{on ? "ON" : "OFF"}</span>
+    <div className="rounded-2xl bg-card p-5 shadow-sm ring-1 ring-border">
+      <div className="flex items-center justify-between mb-3">
+        <Icon className="size-5 text-brand" />
+        {trend && <span className="text-xs text-green-500 font-medium">{trend}</span>}
       </div>
-      <div className="flex items-center justify-between">
-        <Icon className="size-6 text-brand dark:text-white transition-colors" />
-        <ToggleSwitch checked={on} onCheckedChange={setOn} />
-      </div>
+      <div className="text-2xl font-bold text-foreground">{value}</div>
+      <h4 className="text-sm font-medium text-foreground mt-1">{title}</h4>
+      {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
     </div>
   )
 }

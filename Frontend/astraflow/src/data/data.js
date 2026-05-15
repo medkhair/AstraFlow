@@ -179,7 +179,7 @@ const support_tickets = [
   },
 ];
 
-module.exports = {
+export {
   tenants,
   users,
   owners,

@@ -1,27 +1,26 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 const data = [
-  { name: "Feb", water: 50, gas: 30, electricity: 40 },
-  { name: "Mar", water: 70, gas: 50, electricity: 60 },
-  { name: "Apr", water: 60, gas: 40, electricity: 55 },
-  { name: "May", water: 65, gas: 45, electricity: 60 },
-  { name: "Jun", water: 90, gas: 70, electricity: 80 },
-  { name: "Jul", water: 75, gas: 85, electricity: 50 },
-  { name: "Aug", water: 68, gas: 60, electricity: 55 },
-  { name: "Sep", water: 62, gas: 52, electricity: 48 },
+  { month: "Dec", revenue: 0, subscriptions: 0 },
+  { month: "Jan", revenue: 0, subscriptions: 0 },
+  { month: "Feb", revenue: 19.98, subscriptions: 2 },
+  { month: "Mar", revenue: 29.97, subscriptions: 3 },
+  { month: "Apr", revenue: 19.98, subscriptions: 2 },
+  { month: "May", revenue: 9.99, subscriptions: 1 },
 ]
 
 export function ConsumptionChart() {
   return (
     <section className="min-w-0 rounded-2xl bg-card p-5 shadow-sm ring-1 ring-border">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground dark:text-muted-foreground">Consumption</h3>
+        <h3 className="text-sm font-semibold text-foreground dark:text-muted-foreground">Revenue Overview</h3>
+        <span className="text-xs text-muted-foreground">Last 6 months</span>
       </div>
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-            <XAxis dataKey="name" tickLine={false} stroke="var(--muted-foreground)" />
+            <XAxis dataKey="month" tickLine={false} stroke="var(--muted-foreground)" />
             <YAxis tickLine={false} axisLine={false} stroke="var(--muted-foreground)" />
             <Tooltip
               contentStyle={{
@@ -31,9 +30,8 @@ export function ConsumptionChart() {
               }}
             />
             <Legend wrapperStyle={{ color: "var(--muted-foreground)" }} />
-            <Bar dataKey="water" fill="var(--chart-1)" radius={[6, 6, 0, 0]} />
-            <Bar dataKey="gas" fill="var(--chart-2)" radius={[6, 6, 0, 0]} />
-            <Bar dataKey="electricity" fill="var(--chart-5)" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="revenue" name="Revenue ($)" fill="var(--chart-1)" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="subscriptions" name="Subscriptions" fill="var(--chart-2)" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

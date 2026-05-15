@@ -32,7 +32,7 @@ export default function DashboardLayout() {
               <Topbar onMenuClick={() => setSidebarOpen(true)} />
               <Outlet />
               <p className="mt-2 bottom-0 text-xs text-muted-foreground">
-                © All rights reserved by <a href="https://codescandy.com/" className="underline">CodesCandy</a>.
+                &copy; {new Date().getFullYear()} AstraFlow. All rights reserved.
                 Distributed by: <a href="https://themewagon.com" target="_blank" rel="noreferrer" className="underline">ThemeWagon</a>
               </p>
             </main>

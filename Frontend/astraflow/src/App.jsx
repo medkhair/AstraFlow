@@ -2,11 +2,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { ThemeProvider } from "@/components/theme-provider"
 import DashboardLayout from "@/layouts/DashboardLayout"
 import DashboardPage from "@/pages/Dashboard"
-import MessagesPage from "@/pages/Messages"
-import DevicesPage from "@/pages/Devices"
+import ChannelsPage from "@/pages/Devices"
+import TicketsPage from "@/pages/Messages"
+import PlansPage from "@/pages/Statistics"
+import PaymentsPage from "@/pages/Security"
 import ProfilePage from "@/pages/Profile"
-import SecurityPage from "@/pages/Security"
-import StatisticsPage from "@/pages/Statistics"
+import ClientsPage from "@/pages/Clients"
+import SettingsPage from "@/pages/Settings"
 import SignInPage from "@/pages/SignIn"
 import SignUpPage from "@/pages/SignUp"
 
@@ -18,11 +20,13 @@ function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/messages" element={<MessagesPage />} />
-            <Route path="/devices" element={<DevicesPage />} />
+            <Route path="/channels" element={<ChannelsPage />} />
+            <Route path="/clients" element={<ClientsPage />} />
+            <Route path="/plans" element={<PlansPage />} />
+            <Route path="/tickets" element={<TicketsPage />} />
+            <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/security" element={<SecurityPage />} />
-            <Route path="/statistics" element={<StatisticsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />

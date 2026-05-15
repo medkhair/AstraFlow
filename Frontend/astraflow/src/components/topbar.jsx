@@ -11,6 +11,15 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ColorThemePicker } from "@/components/color-theme"
+import { users, tenants } from "@/data/data"
+
+const adminUser = users.find((u) => u.user_type === "ADMIN")
+const tenant = tenants[0]
+const initials = adminUser?.full_name
+  .split(" ")
+  .map((n) => n[0])
+  .join("")
+  .toUpperCase()
 
 export function Topbar({ onMenuClick }) {
   const [q, setQ] = useState("")
@@ -35,7 +44,7 @@ export function Topbar({ onMenuClick }) {
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search rooms, devices, or users..."
+              placeholder="Search channels, clients, plans..."
               className="w-full rounded-full border bg-background pl-9 pr-3 py-2 text-sm"
               aria-label="Search"
             />
@@ -50,15 +59,14 @@ export function Topbar({ onMenuClick }) {
               <Bell className="size-5" aria-hidden />
               <span className="sr-only">Open notifications</span>
               <span className="absolute right-1 top-1 inline-flex items-center justify-center text-[10px] bg-red-500 text-white rounded-full h-4 min-w-4 px-1">
-                3
+                2
               </span>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuContent align="end" className="w-72">
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Washer cycle completed</DropdownMenuItem>
-              <DropdownMenuItem>Front door locked</DropdownMenuItem>
-              <DropdownMenuItem>HVAC filter reminder</DropdownMenuItem>
+              <DropdownMenuItem>New support ticket: "Stream not working"</DropdownMenuItem>
+              <DropdownMenuItem>Subscription expiring: Bob Client (Jun 13)</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-muted-foreground">View all</DropdownMenuItem>
             </DropdownMenuContent>
@@ -74,10 +82,10 @@ export function Topbar({ onMenuClick }) {
               <DropdownMenuLabel>Settings</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <button className="w-full text-left">Manage users</button>
+                <a href="/settings">Branding</a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <button className="w-full text-left">Network</button>
+                <a href="/plans">Plans & Billing</a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <div className="px-2 py-1.5">
@@ -93,24 +101,29 @@ export function Topbar({ onMenuClick }) {
           <DropdownMenu>
             <DropdownMenuTrigger className="rounded-full p-1.5 hover:bg-muted focus:outline-none focus:ring-2">
               <Avatar className="size-8">
-                <AvatarFallback>JR</AvatarFallback>
+                <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <span className="sr-only">Open user menu</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="flex items-center gap-2">
-                <User className="size-4" />
-                Signed in as Jennifer
+              <DropdownMenuLabel className="flex flex-col gap-0.5">
+                <span className="flex items-center gap-2">
+                  <User className="size-4" />
+                  {adminUser?.full_name}
+                </span>
+                <span className="text-xs font-normal text-muted-foreground">{tenant?.name}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <a href="/profile">Profile</a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href="/devices">My devices</a>
+                <a href="/settings">Settings</a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">Sign out</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <a href="/signin" className="text-destructive">Sign out</a>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
