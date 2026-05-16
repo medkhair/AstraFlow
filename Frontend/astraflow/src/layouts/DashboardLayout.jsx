@@ -33,7 +33,6 @@ export default function DashboardLayout() {
               <Outlet />
               <p className="mt-2 bottom-0 text-xs text-muted-foreground">
                 &copy; {new Date().getFullYear()} AstraFlow. All rights reserved.
-                Distributed by: <a href="https://themewagon.com" target="_blank" rel="noreferrer" className="underline">ThemeWagon</a>
               </p>
             </main>
           </div>

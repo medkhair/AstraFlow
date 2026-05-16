@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Spring Tools Suite ###
+application.properties
+application.yml
+application-*.properties
+application-*.yml
