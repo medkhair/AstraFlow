@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 @Repository
 public interface ChannelCategoryRepository extends JpaRepository<ChannelCategory, UUID> {
@@ -13,4 +14,6 @@ public interface ChannelCategoryRepository extends JpaRepository<ChannelCategory
     List<ChannelCategory> findByTenantIdOrderBySortOrderAsc(UUID tenantId);
 
     boolean existsByNameAndTenantId(String name, UUID tenantId);
+
+    Optional<ChannelCategory> findByNameAndTenantId(String name, UUID tenantId);
 }

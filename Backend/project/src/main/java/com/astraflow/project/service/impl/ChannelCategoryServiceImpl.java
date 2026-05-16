@@ -54,4 +54,16 @@ public class ChannelCategoryServiceImpl implements ChannelCategoryService {
     public void deleteById(UUID id) {
         channelCategoryRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existsByNameAndTenantId(String name, UUID tenantId) {
+        return channelCategoryRepository.existsByNameAndTenantId(name, tenantId);
+    }
+
+
+    @Override
+    public Optional<ChannelCategory> findByNameAndTenantId(String name, UUID tenantId) {
+        return channelCategoryRepository.findByNameAndTenantId(name, tenantId);
+    }
+
 }

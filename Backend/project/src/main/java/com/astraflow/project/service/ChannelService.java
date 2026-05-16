@@ -24,4 +24,10 @@ public interface ChannelService {
     Channel update(UUID id, Channel channel);
 
     void deleteById(UUID id);
+
+    boolean existsByTenantIdAndStreamUrl(UUID tenantId, String streamUrl);
+
+    boolean existsByTenantIdAndName(UUID tenantId, String name);
+
+    
 }

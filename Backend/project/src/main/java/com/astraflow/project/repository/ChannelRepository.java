@@ -18,4 +18,8 @@ public interface ChannelRepository extends JpaRepository<Channel, UUID> {
     List<Channel> findByCategoryId(UUID categoryId);
 
     List<Channel> findByTenantIdOrderByChannelNumberAsc(UUID tenantId);
+
+    boolean existsByTenantIdAndStreamUrl(UUID tenantId, String streamUrl);
+
+    boolean existsByTenantIdAndName(UUID tenantId, String name);
 }

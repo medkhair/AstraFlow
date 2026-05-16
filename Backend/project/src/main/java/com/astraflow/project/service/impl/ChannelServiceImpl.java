@@ -65,4 +65,15 @@ public class ChannelServiceImpl implements ChannelService {
     public void deleteById(UUID id) {
         channelRepository.deleteById(id);
     }
+
+
+    @Override    
+    public boolean existsByTenantIdAndStreamUrl(UUID tenantId, String streamUrl) {
+        return channelRepository.existsByTenantIdAndStreamUrl(tenantId, streamUrl);
+    }
+
+    @Override
+    public boolean existsByTenantIdAndName(UUID tenantId, String name) {
+        return channelRepository.existsByTenantIdAndName(tenantId, name);
+    }
 }

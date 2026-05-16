@@ -19,4 +19,8 @@ public interface ChannelCategoryService {
     ChannelCategory update(UUID id, ChannelCategory category);
 
     void deleteById(UUID id);
+
+    boolean existsByNameAndTenantId(String name, UUID tenantId);
+
+    Optional<ChannelCategory> findByNameAndTenantId(String name, UUID tenantId);
 }
