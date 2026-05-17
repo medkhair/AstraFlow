@@ -1,91 +1,76 @@
-import { channels as initialChannels, channel_categories } from "@/data/data"
 import { Tv, FolderOpen, Pencil, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { ChannelCategorieModal } from "@/components/modals/ChannelCategorie"
 import { ChannelModal } from "@/components/modals/ChannelModal"
 import { DeletingModal } from "@/components/modals/DeletingModal"
+import { useChannels } from "@/hooks/useChannels"
+import { useChannelCategories } from "@/hooks/useChannelCategories"
 
 export default function ChannelsPage() {
+  const { channels: rawChannels = [], loading: chLoading, error: chError, addChannel, editChannel, removeChannel } = useChannels()
+  const { categories: rawCategories = [], loading: catLoading, addCategory, editCategory, removeCategory } = useChannelCategories()
+
+  const channels = Array.isArray(rawChannels) ? rawChannels : []
+  const categories = Array.isArray(rawCategories) ? rawCategories : []
+
   const [activeCategory, setActiveCategory] = useState("ALL")
-  const [categories, setCategories] = useState(channel_categories)
-  const [channels, setChannels] = useState(initialChannels)
   const [modalOpen, setModalOpen] = useState(false)
-  const [editTarget, setEditTarget] = useState(null)
+  const [categoryToEdit, setCategoryToEdit] = useState(null)
   const [channelModalOpen, setChannelModalOpen] = useState(false)
-  const [editChannel, setEditChannel] = useState(null)
+  const [channelToEdit, setChannelToEdit] = useState(null)
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, label: "", onConfirm: null })
 
   function askDelete(label, onConfirm) {
     setDeleteConfirm({ open: true, label, onConfirm })
   }
 
-  function handleAddCategory(data) {
-    setCategories((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        tenant_id: channel_categories[0]?.tenant_id ?? "",
-        ...data,
-      },
-    ])
-  }
-
-  function handleEditCategory(data) {
-    setCategories((prev) =>
-      prev.map((c) => (c.id === editTarget.id ? { ...c, ...data } : c))
-    )
-  }
-
-  function handleDeleteCategory(id, name) {
-    askDelete(name, () => {
-      setCategories((prev) => prev.filter((c) => c.id !== id))
-      if (activeCategory === id) setActiveCategory("ALL")
-    })
-  }
-
   function openAdd() {
-    setEditTarget(null)
+    setCategoryToEdit(null)
     setModalOpen(true)
   }
 
   function openEdit(e, cat) {
     e.stopPropagation()
-    setEditTarget(cat)
+    setCategoryToEdit(cat)
     setModalOpen(true)
   }
 
-  function handleAddChannel(data) {
-    setChannels((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        tenant_id: channel_categories[0]?.tenant_id ?? "",
-        ...data,
-      },
-    ])
+  async function handleCategorySubmit(data) {
+    if (categoryToEdit) {
+      await editCategory(categoryToEdit.id, data)
+    } else {
+      await addCategory(data)
+    }
   }
 
-  function handleEditChannel(data) {
-    setChannels((prev) =>
-      prev.map((c) => (c.id === editChannel.id ? { ...c, ...data } : c))
-    )
-  }
-
-  function handleDeleteChannel(id, name) {
+  function handleDeleteCategory(id, name) {
     askDelete(name, () => {
-      setChannels((prev) => prev.filter((c) => c.id !== id))
+      removeCategory(id)
+      if (activeCategory === id) setActiveCategory("ALL")
     })
   }
 
   function openAddChannel() {
-    setEditChannel(null)
+    setChannelToEdit(null)
     setChannelModalOpen(true)
   }
 
   function openEditChannel(e, ch) {
     e.stopPropagation()
-    setEditChannel(ch)
+    setChannelToEdit(ch)
     setChannelModalOpen(true)
+  }
+
+  async function handleChannelSubmit(data) {
+    if (channelToEdit) {
+      await editChannel(channelToEdit.id, data)
+    } else {
+      await addChannel(data)
+    }
+  }
+
+  function handleDeleteChannel(id, name) {
+    askDelete(name, () => removeChannel(id))
   }
 
   const filtered =
@@ -174,7 +159,7 @@ export default function ChannelsPage() {
             <h1 className="text-balance text-2xl font-semibold text-foreground">Channels</h1>
             {activeCategory !== "ALL" && (
               <p className="text-xs text-brand mt-0.5">
-                Filtered by: {channel_categories.find((c) => c.id === activeCategory)?.name}
+                Filtered by: {categories.find((c) => c.id === activeCategory)?.name}
                 <button onClick={() => setActiveCategory("ALL")} className="ml-2 underline text-muted-foreground">
                   Clear
                 </button>
@@ -203,7 +188,7 @@ export default function ChannelsPage() {
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((ch) => {
-                const cat = channel_categories.find((c) => c.id === ch.category_id)
+                const cat = categories.find((c) => c.id === ch.category_id)
                 return (
                   <tr key={ch.id} className="hover:bg-background transition-colors">
                     <td className="py-3 pr-4 text-muted-foreground font-mono">{ch.channel_number}</td>
@@ -267,14 +252,15 @@ export default function ChannelsPage() {
       <ChannelCategorieModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSubmit={editTarget ? handleEditCategory : handleAddCategory}
-        initial={editTarget}
+        onSubmit={handleCategorySubmit}
+        initial={categoryToEdit}
       />
       <ChannelModal
         open={channelModalOpen}
         onClose={() => setChannelModalOpen(false)}
-        onSubmit={editChannel ? handleEditChannel : handleAddChannel}
-        initial={editChannel}
+        onSubmit={handleChannelSubmit}
+        initial={channelToEdit}
+        channelCategories={categories}
       />
       <DeletingModal
         open={deleteConfirm.open}

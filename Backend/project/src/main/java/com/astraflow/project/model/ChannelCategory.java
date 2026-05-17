@@ -31,7 +31,7 @@ public class ChannelCategory {
     @Column(nullable = false)
     private Integer sortOrder;
 
-    private ChannelCategory() {}
+    protected ChannelCategory() {}
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }

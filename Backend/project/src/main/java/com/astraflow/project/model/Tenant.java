@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(
         name = "tenants",
@@ -58,17 +60,21 @@ public class Tenant {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "tenant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
     private Branding branding;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Channel> channels = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Plan> plans = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tenant", fetch = FetchType.LAZY)
     @Builder.Default
     private List<SupportTicket> supportTickets = new ArrayList<>();
@@ -176,8 +182,5 @@ public class Tenant {
 	public void setSupportTickets(List<SupportTicket> supportTickets) {
 		this.supportTickets = supportTickets;
 	}
-    
-    
-    
     
 }

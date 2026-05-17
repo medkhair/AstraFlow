@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { X } from "lucide-react"
-import { channel_categories } from "@/data/data"
 
 const defaultForm = {
   name: "",
@@ -11,7 +10,7 @@ const defaultForm = {
   status: "ACTIVE",
 }
 
-export function ChannelModal({ open, onClose, onSubmit, initial }) {
+export function ChannelModal({ open, onClose, onSubmit, initial, channelCategories }) {
   const [form, setForm] = useState(defaultForm)
   const [errors, setErrors] = useState({})
   const isEdit = Boolean(initial)
@@ -153,7 +152,7 @@ export function ChannelModal({ open, onClose, onSubmit, initial }) {
                   }`}
                 >
                   <option value="">Select category</option>
-                  {channel_categories.map((cat) => (
+                  {channelCategories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
                     </option>

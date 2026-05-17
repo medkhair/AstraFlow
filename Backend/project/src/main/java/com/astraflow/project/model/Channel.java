@@ -45,7 +45,7 @@ public class Channel {
     @Column(nullable = false, length = 20)
     private ChannelStatus status;
 
-    private Channel() {}
+    protected Channel() {}
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
