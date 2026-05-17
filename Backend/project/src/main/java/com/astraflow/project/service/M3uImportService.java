@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class M3uImportService {
@@ -61,6 +62,16 @@ public class M3uImportService {
                 .orElseThrow(() -> new EntityNotFoundException("Tenant not found: " + tenantId));
 
         String rawContent = downloadPlaylist(playlistUrl);
+        List<M3uEntry> entries = parseEntries(rawContent);
+        return persistEntries(entries, tenant);
+    }
+
+    @Transactional
+    public M3uImportResult importFromFile(MultipartFile file, UUID tenantId) {
+        Tenant tenant = tenantService.findById(tenantId)
+                .orElseThrow(() -> new EntityNotFoundException("Tenant not found: " + tenantId));
+
+        String rawContent = readUploadedFile(file);
         List<M3uEntry> entries = parseEntries(rawContent);
         return persistEntries(entries, tenant);
     }
@@ -303,5 +314,26 @@ public class M3uImportService {
     private String extractAttribute(Pattern pattern, String line) {
         Matcher m = pattern.matcher(line);
         return m.find() ? m.group(1) : null;
+    }
+
+    private String readUploadedFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Uploaded file must not be empty");
+        }
+        String filename = file.getOriginalFilename();
+        if (filename != null) {
+            String lower = filename.toLowerCase();
+            if (!lower.endsWith(".m3u") && !lower.endsWith(".m3u8")) {
+                throw new IllegalArgumentException("File must have a .m3u or .m3u8 extension");
+            }
+        }
+        if (file.getSize() > MAX_PLAYLIST_BYTES) {
+            throw new IllegalArgumentException("File exceeds maximum allowed size of 50 MB");
+        }
+        try {
+            return new String(file.getBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Failed to read uploaded file", e);
+        }
     }
 }

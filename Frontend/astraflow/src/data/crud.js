@@ -70,3 +70,17 @@ import axios from 'axios';
         export const deleteChannelCategory = (categoryId) => deleteData(`/api/v1/channel-categories/${categoryId}`);    
         
         export const getChannelCategoryById = (categoryId) => fetchData(`/api/v1/channel-categories/${categoryId}`);
+
+
+    /* m3u import */
+
+        export const importM3U = (file) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('tenantId', tenantId);
+            return api.post('/api/v1/m3u/import/file', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then(response => response.data);
+        };

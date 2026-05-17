@@ -1,15 +1,18 @@
-import { Tv, FolderOpen, Pencil, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { Tv, FolderOpen, Pencil, Trash2, Upload } from "lucide-react"
+import { useState, useRef } from "react"
 import { ChannelCategorieModal } from "@/components/modals/ChannelCategorie"
 import { ChannelModal } from "@/components/modals/ChannelModal"
 import { DeletingModal } from "@/components/modals/DeletingModal"
 import { useChannels } from "@/hooks/useChannels"
 import { useChannelCategories } from "@/hooks/useChannelCategories"
+import { useImportM3u } from "@/hooks/useImportM3u"
 import Loading from "@/utils/Loading"
 
 export default function ChannelsPage() {
-  const { channels: rawChannels = [], loading: chLoading, error: chError, addChannel, editChannel, removeChannel } = useChannels()
+  const { channels: rawChannels = [], loading: chLoading, error: chError, addChannel, editChannel, removeChannel, refetch: refetchChannels } = useChannels()
   const { categories: rawCategories = [], loading: catLoading, addCategory, editCategory, removeCategory } = useChannelCategories()
+  const { loading: importing, importFile } = useImportM3u()
+  const m3uInputRef = useRef(null)
 
   const channels = Array.isArray(rawChannels) ? rawChannels : []
   const categories = Array.isArray(rawCategories) ? rawCategories : []
@@ -72,6 +75,14 @@ export default function ChannelsPage() {
 
   function handleDeleteChannel(id, name) {
     askDelete(name, () => removeChannel(id))
+  }
+
+  async function handleM3uChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ""
+    await importFile(file)
+    await refetchChannels()
   }
 
   const filtered =
@@ -169,11 +180,28 @@ export default function ChannelsPage() {
               </p>
             )}
           </div>
-          <button className="rounded-xl bg-brand text-white text-sm px-4 py-2 hover:opacity-90 transition-opacity"
-            onClick={openAddChannel}
-          >
-            + Add Channel
-          </button>
+          <div className="flex items-center gap-2">
+            <input
+              ref={m3uInputRef}
+              type="file"
+              accept=".m3u,.m3u8"
+              className="hidden"
+              onChange={handleM3uChange}
+            />
+            <button
+              onClick={() => m3uInputRef.current?.click()}
+              disabled={importing}
+              className="flex items-center gap-2 rounded-xl border border-border text-sm px-4 py-2 hover:bg-muted transition-colors disabled:opacity-50"
+            >
+              <Upload className="size-4" />
+              {importing ? "Importing..." : "Import M3U"}
+            </button>
+            <button className="rounded-xl bg-brand text-white text-sm px-4 py-2 hover:opacity-90 transition-opacity"
+              onClick={openAddChannel}
+            >
+              + Add Channel
+            </button>
+          </div>
         </div>
         <p className="text-muted-foreground mb-6">Manage all live TV channels for your tenant.</p>
 
