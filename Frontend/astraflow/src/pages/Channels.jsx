@@ -5,6 +5,7 @@ import { ChannelModal } from "@/components/modals/ChannelModal"
 import { DeletingModal } from "@/components/modals/DeletingModal"
 import { useChannels } from "@/hooks/useChannels"
 import { useChannelCategories } from "@/hooks/useChannelCategories"
+import Loading from "@/utils/Loading"
 
 export default function ChannelsPage() {
   const { channels: rawChannels = [], loading: chLoading, error: chError, addChannel, editChannel, removeChannel } = useChannels()
@@ -77,6 +78,8 @@ export default function ChannelsPage() {
     activeCategory === "ALL"
       ? channels
       : channels.filter((ch) => ch.category_id === activeCategory)
+
+  if (chLoading || catLoading) return <Loading />
 
   return (
     <div className="space-y-6">
