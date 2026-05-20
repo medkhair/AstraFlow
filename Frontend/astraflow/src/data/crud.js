@@ -7,7 +7,8 @@ import axios from 'axios';
 
 
     export const tenantId = "5094c936-5662-43c0-adb6-91804e68359e";
-    export const adminId = "0x2bb1cd7008cb4797b1994db73cc47463";
+    export const adminId = "2bb1cd70-08cb-4797-b199-4db73cc47463";
+    export const clientId = "96a567a1-60e4-4e18-ab2d-b1eed136a776";
 
     export const fetchData = async (endpoint) => {
         try {
@@ -84,3 +85,41 @@ import axios from 'axios';
                 },
             }).then(response => response.data);
         };
+
+    
+    /* Plans */
+        
+        export const getPlans = () => fetchData('/api/v1/plans');
+
+        export const createPlan = (planData) => createData('/api/v1/plans', planData);
+
+        export const updatePlan = (planId, planData) => updateData(`/api/v1/plans/${planId}`, planData);
+        
+        export const deletePlan = (planId) => deleteData(`/api/v1/plans/${planId}`);
+
+        export const getPlanById = (planId) => fetchData(`/api/v1/plans/${planId}`);
+
+    /* Subscriptions */
+
+        export const getSubscriptions = () => fetchData('/api/v1/subscriptions');
+
+        export const createSubscription = (subscriptionData) => createData('/api/v1/subscriptions', subscriptionData);
+
+        export const updateSubscription = (subscriptionId, subscriptionData) => updateData(`/api/v1/subscriptions/${subscriptionId}`, subscriptionData);
+
+        export const deleteSubscription = (subscriptionId) => deleteData(`/api/v1/subscriptions/${subscriptionId}`);
+        
+        export const getSubscriptionById = (subscriptionId) => fetchData(`/api/v1/subscriptions/${subscriptionId}`);
+
+
+    /* Support Tickets */
+
+        export const getSupportTickets = () => fetchData('/api/v1/support-tickets');
+
+        export const createSupportTicket = (ticketData) => createData('/api/v1/support-tickets', ticketData);
+
+        export const updateSupportTicket = (ticketId, ticketData) => updateData(`/api/v1/support-tickets/${ticketId}`, ticketData);
+
+        export const deleteSupportTicket = (ticketId) => deleteData(`/api/v1/support-tickets/${ticketId}`);
+
+        export const getSupportTicketById = (ticketId) => fetchData(`/api/v1/support-tickets/${ticketId}`);
