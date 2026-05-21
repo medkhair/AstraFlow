@@ -123,3 +123,16 @@ import axios from 'axios';
         export const deleteSupportTicket = (ticketId) => deleteData(`/api/v1/support-tickets/${ticketId}`);
 
         export const getSupportTicketById = (ticketId) => fetchData(`/api/v1/support-tickets/${ticketId}`);
+
+
+    /* Branding */
+
+        export const getBrandingByTenantId = (tenantId) => fetchData(`/api/v1/brandings/tenant/${tenantId}`);
+
+        export const updateBranding = (brandingId, brandingData) => updateData(`/api/v1/brandings/${brandingId}`, brandingData);
+
+    /* Tenant */
+
+        export const getTenantInfo = () => fetchData(`/api/v1/tenants/${tenantId}`);
+
+        export const updateTenantInfo = (tenantData) => updateData(`/api/v1/tenants/${tenantId}`, tenantData);

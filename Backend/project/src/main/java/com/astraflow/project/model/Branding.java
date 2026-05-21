@@ -23,7 +23,7 @@ public class Branding {
     @JoinColumn(name = "tenant_id", unique = true, nullable = false)
     private Tenant tenant;
 
-    @Column(length = 500)
+    @Column
     private String logoUrl;
 
     @Column(length = 20)
@@ -32,8 +32,26 @@ public class Branding {
     @Column(length = 20)
     private String secondaryColor;
 
+	@Column(length = 20)
+    private String tercaryColor;
+
+    @Column(length = 20)
+    private String quaternaryColor;
+
+	private String titleFontFamily;
+
+	private String bodyFontFamily;
+
+	private String titleFontSizeUrl;
+
+	private String bodyFontSizeUrl;
+
     @Column(columnDefinition = "TEXT")
     private String customCss;
+
+	@Column(columnDefinition = "TEXT")
+    private String customJs;
+
 
 	public UUID getId() {
 		return id;
@@ -81,6 +99,62 @@ public class Branding {
 
 	public void setCustomCss(String customCss) {
 		this.customCss = customCss;
+	}
+
+	public String getTercaryColor() {
+		return tercaryColor;
+	}
+
+	public void setTercaryColor(String tercaryColor) {
+		this.tercaryColor = tercaryColor;
+	}
+
+	public String getQuaternaryColor() {
+		return quaternaryColor;
+	}
+
+	public void setQuaternaryColor(String quaternaryColor) {
+		this.quaternaryColor = quaternaryColor;
+	}
+
+	public String getTitleFontFamily() {
+		return titleFontFamily;
+	}
+
+	public void setTitleFontFamily(String titleFontFamily) {
+		this.titleFontFamily = titleFontFamily;
+	}
+
+	public String getBodyFontFamily() {
+		return bodyFontFamily;
+	}
+
+	public void setBodyFontFamily(String bodyFontFamily) {
+		this.bodyFontFamily = bodyFontFamily;
+	}
+
+	public String getTitleFontSizeUrl() {
+		return titleFontSizeUrl;
+	}
+
+	public void setTitleFontSizeUrl(String titleFontSizeUrl) {
+		this.titleFontSizeUrl = titleFontSizeUrl;
+	}
+
+	public String getBodyFontSizeUrl() {
+		return bodyFontSizeUrl;
+	}
+
+	public void setBodyFontSizeUrl(String bodyFontSizeUrl) {
+		this.bodyFontSizeUrl = bodyFontSizeUrl;
+	}
+
+	public String getCustomJs() {
+		return customJs;
+	}
+
+	public void setCustomJs(String customJs) {
+		this.customJs = customJs;
 	}
     
     
