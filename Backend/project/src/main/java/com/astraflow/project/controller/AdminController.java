@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/admins")
@@ -37,7 +40,13 @@ public class AdminController {
 
     @PostMapping
     public ResponseEntity<Admin> create(@RequestBody Admin admin) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.save(admin));
+    	BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+        admin.setPassword(encoder.encode(admin.getPassword()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+    
+        		adminService.save(admin)
+        		
+        		);
     }
 
     @PutMapping("/{id}")

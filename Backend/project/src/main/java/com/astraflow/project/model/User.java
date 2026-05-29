@@ -44,6 +44,10 @@ public abstract class User {
 
     @Column(length = 20)
     private String phone;
+    
+    @Column(unique = true, nullable = false, length = 255)
+    private String username;
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
@@ -120,7 +124,16 @@ public abstract class User {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
     
+	
     
     
 }
