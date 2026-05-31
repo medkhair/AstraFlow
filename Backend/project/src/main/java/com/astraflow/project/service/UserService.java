@@ -24,4 +24,6 @@ public interface UserService {
     void deleteById(UUID id);
 
     User save(User user);
+
+    String verify(User user);
 }

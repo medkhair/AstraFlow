@@ -59,4 +59,9 @@ public class AdminController {
         adminService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @PostMapping("/login")
+    public String login(@RequestBody Admin user) {
+        return adminService.verify(user);
+    }
 }

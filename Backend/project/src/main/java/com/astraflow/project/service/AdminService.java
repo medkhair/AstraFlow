@@ -21,4 +21,6 @@ public interface AdminService {
     Admin update(UUID id, Admin admin);
 
     void deleteById(UUID id);
+
+	String verify(Admin user);
 }
