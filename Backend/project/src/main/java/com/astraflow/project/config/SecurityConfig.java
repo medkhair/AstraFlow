@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.astraflow.project.security.filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +25,9 @@ public class SecurityConfig {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private JwtFilter jwtFilter;
 	
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,6 +38,8 @@ public class SecurityConfig {
 			.httpBasic(Customizer.withDefaults())
 			.authenticationProvider(authenticationProvider())
 			.sessionManagement( session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		
+		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		
         return http.build();
     }
