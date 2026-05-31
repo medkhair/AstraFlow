@@ -2,8 +2,52 @@ import axios from 'axios';
 // import Cookies from 'js-cookie';
 
     const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL
+        baseURL: import.meta.env.VITE_API_BASE_URL
     });
+
+    const getAuthHeaders = () => {
+        const token = localStorage.getItem('authToken');
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    };
+
+    // Redirect to sign in on invalid/expired token
+    api.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (error.response?.status === 401) {
+                localStorage.removeItem('authToken');
+                window.location.replace('/signin');
+                return new Promise(() => {}); // halt — never resolves so no error propagates
+            }
+            return Promise.reject(error);
+        }
+    );
+
+    // login and token management
+    export const login = async (username, password) => {
+        try {
+            const response = await api.post('/api/v1/admins/login', { username, password });
+            const data = response.data;
+            console.log('[login] response:', data);
+            const token = data;
+            if (token) {
+                localStorage.setItem('authToken', token);
+                api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } else {
+                localStorage.setItem('authToken', 'authenticated');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    export const logout = () => {
+        // Remove token from storage
+        localStorage.removeItem('authToken');
+        // Remove token from axios headers
+        delete api.defaults.headers.common['Authorization'];
+    };
 
 
     export const tenantId = "5094c936-5662-43c0-adb6-91804e68359e";
@@ -12,7 +56,7 @@ import axios from 'axios';
 
     export const fetchData = async (endpoint) => {
         try {
-            const response = await api.get(endpoint);
+            const response = await api.get(endpoint, { headers: getAuthHeaders() });
             return response.data;
         } catch (error) {
             throw error;
@@ -21,7 +65,7 @@ import axios from 'axios';
 
     export const createData = async (endpoint, data) => {
         try {
-            const response = await api.post(endpoint, data);
+            const response = await api.post(endpoint, data, { headers: getAuthHeaders() });
             return response.data;
         } catch (error) {
             throw error;
@@ -30,7 +74,7 @@ import axios from 'axios';
 
     export const updateData = async (endpoint, data) => {
         try {
-            const response = await api.put(endpoint, data);
+            const response = await api.put(endpoint, data, { headers: getAuthHeaders() });
             return response.data;
         } catch (error) {
             throw error;
@@ -39,7 +83,7 @@ import axios from 'axios';
 
     export const deleteData = async (endpoint) => {
         try {
-            const response = await api.delete(endpoint);
+            const response = await api.delete(endpoint, { headers: getAuthHeaders() });
             return response.data;
         } catch (error) {
             throw error;
@@ -81,6 +125,7 @@ import axios from 'axios';
             formData.append('tenantId', tenantId);
             return api.post('/api/v1/m3u/import/file', formData, {
                 headers: {
+                    ...getAuthHeaders(),
                     'Content-Type': 'multipart/form-data',
                 },
             }).then(response => response.data);
