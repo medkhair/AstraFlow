@@ -21,4 +21,6 @@ public interface ClientService {
     Client update(UUID id, Client client);
 
     void deleteById(UUID id);
+
+	String verify(Client user);
 }

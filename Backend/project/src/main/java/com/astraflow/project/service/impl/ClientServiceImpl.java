@@ -1,10 +1,18 @@
 package com.astraflow.project.service.impl;
 
+
 import com.astraflow.project.model.Client;
+import com.astraflow.project.model.Tenant;
 import com.astraflow.project.repository.ClientRepository;
+import com.astraflow.project.repository.TenantRepository;
 import com.astraflow.project.service.ClientService;
+import com.astraflow.project.service.JwtService;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +26,15 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
+    
+    @Autowired
+    private TenantRepository tenantRepository;
+    
+    @Autowired
+    private AuthenticationManager authManager;
+    
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public List<Client> findAll() {
@@ -42,6 +59,11 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public Client save(Client client) {
+        if (client.getTenant() != null && client.getTenant().getId() != null) {
+            Tenant managedTenant = tenantRepository.findById(client.getTenant().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Tenant not found"));
+            client.setTenant(managedTenant);
+        }
         return clientRepository.save(client);
     }
 
@@ -59,4 +81,18 @@ public class ClientServiceImpl implements ClientService {
     public void deleteById(UUID id) {
         clientRepository.deleteById(id);
     }
+
+	@Override
+	public String verify(Client user) {
+		Authentication authentication = authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+        );
+        if (authentication.isAuthenticated()) {
+            Client client = clientRepository.findByUsername(user.getUsername())
+                    .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+            return jwtService.generateToken(client.getUsername(), client.getId());
+        } else {
+            return "fail";
+        }
+	}
 }

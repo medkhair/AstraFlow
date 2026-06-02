@@ -1,10 +1,12 @@
 package com.astraflow.project.controller;
 
+
 import com.astraflow.project.model.Client;
 import com.astraflow.project.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +37,6 @@ public class ClientController {
         return ResponseEntity.ok(clientService.findByTenantId(tenantId));
     }
 
-    @PostMapping
-    public ResponseEntity<Client> create(@RequestBody Client client) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(client));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Client> update(@PathVariable UUID id, @RequestBody Client client) {
         return ResponseEntity.ok(clientService.update(id, client));
@@ -50,4 +47,24 @@ public class ClientController {
         clientService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    
+    
+    @PostMapping("/register")
+    public ResponseEntity<Client> register(@RequestBody Client client) {
+    	
+    	BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+        client.setPassword(encoder.encode(client.getPassword()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+    
+        		clientService.save(client)
+        		
+        		);
+    }
+    
+    @PostMapping("/login")
+    public String login(@RequestBody Client user) {
+        return clientService.verify(user);
+    }
+
+    
 }

@@ -36,10 +36,10 @@ public class JwtService {
         }
     }
 
-    public String generateToken(String username, UUID adminId) {
+    public String generateToken(String username, UUID userId) {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("adminId", adminId.toString());
+        claims.put("userId", userId.toString());
 
         return Jwts.builder()
                 .claims()
