@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -63,5 +64,13 @@ public class AdminController {
     @PostMapping("/login")
     public String login(@RequestBody Admin user) {
         return adminService.verify(user);
+    }
+    
+    @PatchMapping("/{id}/change-password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable UUID id,
+            @RequestBody Map<String, String> body) {
+        adminService.changePassword(id, body.get("currentPassword"), body.get("newPassword"));
+        return ResponseEntity.ok().build();
     }
 }

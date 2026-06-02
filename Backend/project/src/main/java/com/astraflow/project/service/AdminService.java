@@ -23,4 +23,6 @@ public interface AdminService {
     void deleteById(UUID id);
 
 	String verify(Admin user);
+
+	void changePassword(UUID id, String string, String string2);
 }

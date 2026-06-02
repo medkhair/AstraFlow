@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,13 +74,30 @@ public class AdminServiceImpl implements AdminService {
         adminRepository.deleteById(id);
     }
 
-	@Override
-	public String verify(Admin user) {
-		Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+    @Override
+    public String verify(Admin user) {
+        Authentication authentication = authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+        );
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername());
+            Admin admin = adminRepository.findByUsername(user.getUsername())
+                    .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+            return jwtService.generateToken(admin.getUsername(), admin.getId());
         } else {
             return "fail";
         }
-	}
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(UUID id, String currentPassword, String newPassword) {
+    	BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+        if (!encoder.matches(currentPassword, admin.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        admin.setPassword(encoder.encode(newPassword));
+        adminRepository.save(admin);
+    }
 }

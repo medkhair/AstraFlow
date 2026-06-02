@@ -17,6 +17,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -35,8 +36,11 @@ public class JwtService {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, UUID adminId) {
         Map<String, Object> claims = new HashMap<>();
+
+        claims.put("adminId", adminId.toString());
+
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -83,5 +87,9 @@ public class JwtService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractAdminId(String token) {
+        return (String) extractAllClaims(token).get("adminId");
     }
 }

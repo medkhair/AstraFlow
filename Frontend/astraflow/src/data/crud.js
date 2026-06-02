@@ -28,10 +28,12 @@ import axios from 'axios';
         try {
             const response = await api.post('/api/v1/admins/login', { username, password });
             const data = response.data;
-            console.log('[login] response:', data);
             const token = data;
             if (token) {
                 localStorage.setItem('authToken', token);
+                localStorage.setItem('tokenSubject', extractSubjectFromToken(token));
+                localStorage.setItem('adminId', extractAdminIdFromToken(token));
+                setTenantId();
                 api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             } else {
                 localStorage.setItem('authToken', 'authenticated');
@@ -50,8 +52,68 @@ import axios from 'axios';
     };
 
 
-    export const tenantId = "5094c936-5662-43c0-adb6-91804e68359e";
-    export const adminId = "2bb1cd70-08cb-4797-b199-4db73cc47463";
+    export const extractSubjectFromToken = (token) => {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.sub;
+        } catch (error) {
+            console.error('Error extracting subject from token:', error);
+            return null;
+        }
+    };
+
+    const extractAdminIdFromToken = (token) => {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.adminId;
+        } catch (error) {
+            console.error('Error extracting adminId from token:', error);
+            return null;
+        }
+    };
+
+    export const getAdminById = async (adminId) => {
+        try {
+            const response = await api.get(`/api/v1/admins/${adminId}`, { headers: getAuthHeaders() });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    export const updateAdmin = async (adminId, adminData) => {
+        try {
+            const response = await api.put(`/api/v1/admins/${adminId}`, adminData, { headers: getAuthHeaders() });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    };
+
+    export const changePassword = async (adminId, currentPassword, newPassword) => {
+        try {
+            const response = await api.patch(`/api/v1/admins/${adminId}/change-password`, { currentPassword, newPassword }, { headers: getAuthHeaders() });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const setTenantId = async () => {
+        try {
+            const admin = await getAdminById(localStorage.getItem('adminId'));
+            localStorage.setItem('tenantId', admin?.tenant?.id || '');
+            return admin?.tenant?.id || null;
+        } catch (error) {
+            console.error('Error fetching tenant ID:', error);
+            return null;
+        }
+    };
+
+
+    export const tenantId = localStorage.getItem('tenantId') || "";
+    export const adminId = localStorage.getItem('adminId') || "";
     export const clientId = "96a567a1-60e4-4e18-ab2d-b1eed136a776";
 
     export const fetchData = async (endpoint) => {
