@@ -152,4 +152,30 @@ import axios from 'axios';
     };
 
 
-    
+    /* Channels Fetching */
+
+        export const fetchChannels = async () => {
+            const tid = localStorage.getItem('tenantId');
+            const response = await api.get(`/api/v1/channels/tenant/${tid}`, { headers: getAuthHeaders() });
+            return response.data;
+        };
+
+        export const fetchChannelById = async (channelId) => {
+            const response = await api.get(`/api/v1/channels/${channelId}`, { headers: getAuthHeaders() });
+            return response.data;
+        };
+
+
+
+    /* Channel Categories Fetching */
+
+        export const fetchCategories = async () => {
+            const tid = localStorage.getItem('tenantId');
+            const response = await api.get(`/api/v1/channel-categories/tenant/${tid}`, { headers: getAuthHeaders() });
+            return response.data;
+        };
+
+        export const fetchCategoryById = async (categoryId) => {
+            const response = await api.get(`/api/v1/channel-categories/${categoryId}`, { headers: getAuthHeaders() });
+            return response.data;
+        };

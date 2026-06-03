@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { channels, categories } from "../data/data";
+import { useChannels } from "../hooks/useChannels";
+import { useChannelCategories } from "../hooks/useChannelCategories";
 import { ChannelCard } from "../components/ChannelCard";
 
 export function Home({ user, favorites, toggleFavorite, onWatch, onLogout }) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { channels, isLoading: channelsLoading } = useChannels();
+  const { categories } = useChannelCategories();
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -141,7 +144,11 @@ export function Home({ user, favorites, toggleFavorite, onWatch, onLogout }) {
 
       {/* Channel Grid */}
       <main className="channel-grid-wrapper">
-        {visibleChannels.length === 0 ? (
+        {channelsLoading ? (
+          <div className="empty-state">
+            <span className="login-spinner" />
+          </div>
+        ) : visibleChannels.length === 0 ? (
           <div className="empty-state">
             <span className="empty-icon">📺</span>
             <p>
