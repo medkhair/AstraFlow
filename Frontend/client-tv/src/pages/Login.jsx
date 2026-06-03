@@ -1,28 +1,29 @@
 import { useState } from "react";
-import { currentUser } from "../data/data";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuthentication";
 
-export function Login({ onLogin }) {
-  const [email, setEmail] = useState("");
+export function Login() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login, user } = useAuth();
+  const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  if (user) return <Navigate to="/" replace />;
+
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
-
-    setTimeout(() => {
-      if (
-        email.trim() === currentUser.email &&
-        password === currentUser.password
-      ) {
-        onLogin(currentUser);
-      } else {
-        setError("Invalid email or password. Please try again.");
-        setLoading(false);
-      }
-    }, 800);
+    try {
+      await login(username, password);
+      navigate("/", { replace: true });
+    } catch {
+      setError("Invalid credentials. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -79,14 +80,14 @@ export function Login({ onLogin }) {
 
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="login-field">
-            <label htmlFor="tv-email">Email</label>
+            <label htmlFor="tv-username">Username</label>
             <input
-              id="tv-email"
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
+              id="tv-username"
+              type="text"
+              placeholder="your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
               required
             />
           </div>
@@ -114,12 +115,6 @@ export function Login({ onLogin }) {
             )}
           </button>
         </form>
-
-        <div className="login-hint">
-          <span className="hint-label">Demo credentials</span>
-          <code>client@example.com</code>
-          <code>client123</code>
-        </div>
       </div>
     </div>
   );

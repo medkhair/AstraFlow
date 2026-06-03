@@ -10,7 +10,7 @@ import axios from 'axios';
         return token ? { Authorization: `Bearer ${token}` } : {};
     };
 
-    // Redirect to sign in on invalid/expired token
+
     api.interceptors.response.use(
         (response) => response,
         (error) => {
@@ -21,7 +21,7 @@ import axios from 'axios';
             }
             return Promise.reject(error);
         }
-    );
+ );
 
     // login and token management
     export const login = async (username, password) => {
@@ -65,7 +65,7 @@ import axios from 'axios';
     const extractAdminIdFromToken = (token) => {
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.adminId;
+            return payload.userId;
         } catch (error) {
             console.error('Error extracting adminId from token:', error);
             return null;

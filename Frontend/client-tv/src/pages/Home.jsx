@@ -107,10 +107,10 @@ export function Home({ user, favorites, toggleFavorite, onWatch, onLogout }) {
             <span className="clock-date">{formatDate(currentTime)}</span>
           </div>
           <div className="topbar-user">
-            <div className="user-avatar">{user.full_name[0]}</div>
+            <div className="user-avatar">{(user?.full_name ?? user?.username ?? "?")[0]}</div>
             <div className="user-info">
-              <span className="user-name">{user.full_name}</span>
-              <span className="user-plan">{user.subscription.plan}</span>
+              <span className="user-name">{user?.full_name ?? user?.username}</span>
+              <span className="user-plan">{user?.subscription?.plan}</span>
             </div>
           </div>
           <button className="signout-btn" onClick={onLogout}>
