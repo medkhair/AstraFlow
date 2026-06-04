@@ -3,7 +3,7 @@ import { useChannels } from "../hooks/useChannels";
 import { useChannelCategories } from "../hooks/useChannelCategories";
 import { ChannelCard } from "../components/ChannelCard";
 
-export function Home({ user, favorites, toggleFavorite, onWatch, onLogout }) {
+export function Home({ user, favorites, toggleFavorite, onLogout }) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -165,7 +165,6 @@ export function Home({ user, favorites, toggleFavorite, onWatch, onLogout }) {
                 channel={ch}
                 isFavorite={favorites.includes(ch.id)}
                 onToggleFavorite={toggleFavorite}
-                onWatch={onWatch}
               />
             ))}
           </div>

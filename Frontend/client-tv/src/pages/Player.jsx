@@ -1,12 +1,49 @@
 import { useState, useEffect } from "react";
-import { channels, categories } from "../data/data";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useChannels } from "../hooks/useChannels";
+import { useChannelCategories } from "../hooks/useChannelCategories";
+import HlsPlayer from "../components/HlsPlayer";
 
-export function Player({ channel, favorites, toggleFavorite, onBack }) {
+/* ─── Route wrapper ─────────────────────────────────────── */
+export function PlayerPage({ favorites, toggleFavorite }) {
+  const { channelId } = useParams();
+  const navigate = useNavigate();
+  const { channels, isLoading } = useChannels();
+
+  if (isLoading) {
+    return (
+      <div className="player-screen" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <span className="player-stream-spinner" />
+      </div>
+    );
+  }
+
+  const channel = channels.find((ch) => ch.id === channelId);
+  if (!channel) return <Navigate to="/" replace />;
+
+  return (
+    <Player
+      channel={channel}
+      favorites={favorites}
+      toggleFavorite={toggleFavorite}
+      onBack={() => navigate("/")}
+      onWatch={(ch) => navigate(`/player/${ch.id}`)}
+    />
+  );
+}
+
+/* ─── Player UI ─────────────────────────────────────────── */
+function Player({ channel, favorites, toggleFavorite, onBack, onWatch }) {
+  const { channels } = useChannels();
+  const { categories } = useChannelCategories();
   const [showOverlay, setShowOverlay] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [volume, setVolume] = useState(0);
   const isFav = favorites.includes(channel.id);
-
   const category = categories.find((c) => c.id === channel.category_id);
+
+  // Show overlay on any key press or mouse move
+  const revealOverlay = () => setShowOverlay(true);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -19,6 +56,24 @@ export function Player({ channel, favorites, toggleFavorite, onBack }) {
     const timeout = setTimeout(() => setShowOverlay(false), 4000);
     return () => clearTimeout(timeout);
   }, [showOverlay, channel.id]);
+
+  // Keyboard controls
+  useEffect(() => {
+    function handleKey(e) {
+      if (e.key === 'Escape') { onBack(); return; }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setVolume((v) => Math.min(1, Math.round((v + 0.1) * 10) / 10));
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setVolume((v) => Math.max(0, Math.round((v - 0.1) * 10) / 10));
+      }
+      revealOverlay();
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [onBack]);
 
   function handleScreenClick() {
     setShowOverlay((v) => !v);
@@ -54,24 +109,12 @@ export function Player({ channel, favorites, toggleFavorite, onBack }) {
     <div
       className="player-screen"
       onClick={handleScreenClick}
+      onMouseMove={revealOverlay}
       style={{ cursor: showOverlay ? "default" : "none" }}
     >
-      {/* Simulated stream background */}
-      <div className="stream-bg" style={{ "--ch-color": channel.color }}>
-        <div className="stream-scan" />
-        <div className="stream-center">
-          <div
-            className="stream-logo"
-            style={{ background: channel.color }}
-          >
-            {channel.initials}
-          </div>
-          <div className="stream-channel-name">{channel.name}</div>
-          <div className="stream-live-badge">
-            <span className="live-dot" />
-            LIVE
-          </div>
-        </div>
+      {/* HLS stream */}
+      <div className="stream-bg" onClick={(e) => e.stopPropagation()}>
+        <HlsPlayer src={channel.stream_url} volume={volume} onBack={onBack} />
       </div>
 
       {/* Overlay */}
@@ -88,6 +131,14 @@ export function Player({ channel, favorites, toggleFavorite, onBack }) {
             </svg>
             Back
           </button>
+
+          <div className="player-topbar-center">
+            <div className="player-live-badge">
+              <span className="live-dot" />
+              LIVE
+            </div>
+            <span className="player-topbar-channel">{channel.name}</span>
+          </div>
 
           <div className="player-clock">{formatTime(currentTime)}</div>
         </div>
@@ -129,6 +180,38 @@ export function Player({ channel, favorites, toggleFavorite, onBack }) {
               {isFav ? "★" : "☆"}
               {isFav ? " Favorited" : " Add to Favorites"}
             </button>
+
+            {/* Volume control */}
+            <div className="player-volume" onClick={(e) => e.stopPropagation()}>
+              <button
+                className="player-volume-icon"
+                onClick={() => setVolume((v) => v === 0 ? 0.5 : 0)}
+                title={volume === 0 ? "Unmute" : "Mute"}
+              >
+                {volume === 0 ? (
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                ) : volume < 0.5 ? (
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.146 5.146a.5.5 0 01.708 0 5 5 0 010 7.072.5.5 0 11-.708-.708 4 4 0 000-5.656.5.5 0 010-.708z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10a7.971 7.971 0 00-2.343-5.657 1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+              <input
+                type="range"
+                className="player-volume-slider"
+                min="0"
+                max="1"
+                step="0.05"
+                value={volume}                style={{ backgroundSize: `${volume * 100}% 100%` }}                onChange={(e) => setVolume(Number(e.target.value))}
+              />
+              <span className="player-volume-pct">{Math.round(volume * 100)}%</span>
+            </div>
           </div>
 
           {/* Progress bar */}
@@ -160,11 +243,7 @@ export function Player({ channel, favorites, toggleFavorite, onBack }) {
             <button
               key={ch.id}
               className="up-next-item"
-              onClick={() => {
-                /* parent will handle via onWatch — for now navigate directly */
-                onBack();
-                setTimeout(() => {}, 0);
-              }}
+              onClick={() => onWatch(ch)}
             >
               <div
                 className="up-next-logo"

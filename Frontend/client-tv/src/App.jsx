@@ -1,25 +1,16 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuthentication'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { Login } from './pages/Login'
 import { Home } from './pages/Home'
-import { Player } from './pages/Player'
+import { PlayerPage } from './pages/Player'
 import { defaultFavorites } from './data/data'
 import './App.css'
 
 function MainContent() {
   const { user, logout } = useAuth()
-  const [channel, setChannel] = useState(null)
   const [favorites, setFavorites] = useState(defaultFavorites)
-
-  function handleWatch(ch) {
-    setChannel(ch)
-  }
-
-  function handleBack() {
-    setChannel(null)
-  }
 
   function toggleFavorite(channelId) {
     setFavorites((prev) =>
@@ -29,25 +20,30 @@ function MainContent() {
     )
   }
 
-  if (channel) {
-    return (
-      <Player
-        channel={channel}
-        favorites={favorites}
-        toggleFavorite={toggleFavorite}
-        onBack={handleBack}
-      />
-    )
-  }
-
   return (
-    <Home
-      user={user}
-      favorites={favorites}
-      toggleFavorite={toggleFavorite}
-      onWatch={handleWatch}
-      onLogout={logout}
-    />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Home
+            user={user}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+            onLogout={logout}
+          />
+        }
+      />
+      <Route
+        path="/player/:channelId"
+        element={
+          <PlayerPage
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+          />
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
 

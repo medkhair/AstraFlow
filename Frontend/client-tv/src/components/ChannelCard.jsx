@@ -1,11 +1,15 @@
-export function ChannelCard({ channel, isFavorite, onToggleFavorite, onWatch }) {
+import { useNavigate } from "react-router-dom";
+
+export function ChannelCard({ channel, isFavorite, onToggleFavorite }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className="channel-card"
-      onClick={() => onWatch(channel)}
+      onClick={() => navigate(`/player/${channel.id}`)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onWatch(channel)}
+      onKeyDown={(e) => e.key === "Enter" && navigate(`/player/${channel.id}`)}
       aria-label={`Watch ${channel.name}`}
     >
       <div className="card-logo" style={{ background: channel.color }}>
