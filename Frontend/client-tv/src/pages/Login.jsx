@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuthentication";
 
 export function Login() {
@@ -9,6 +9,11 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.classList.add('scrollable');
+    return () => document.body.classList.remove('scrollable');
+  }, []);
 
   if (user) return <Navigate to="/" replace />;
 
@@ -115,6 +120,13 @@ export function Login() {
             )}
           </button>
         </form>
+
+        <p style={{ textAlign: 'center', marginTop: 16, fontSize: 14, color: 'var(--text-muted)' }}>
+          Don't have an account?{' '}
+          <Link to="/register" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+            Create one
+          </Link>
+        </p>
       </div>
     </div>
   );

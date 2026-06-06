@@ -50,15 +50,17 @@ public class ClientController {
     
     
     @PostMapping("/register")
-    public ResponseEntity<Client> register(@RequestBody Client client) {
-    	
-    	BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
-        client.setPassword(encoder.encode(client.getPassword()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-    
-        		clientService.save(client)
-        		
-        		);
+    public ResponseEntity<?> register(@RequestBody Client client) {
+
+        try {
+            Client savedClient = clientService.save(client);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                 .body(savedClient);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                                 .body(e.getMessage());
+        }
     }
     
     @PostMapping("/login")

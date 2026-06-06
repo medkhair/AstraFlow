@@ -14,7 +14,8 @@ import axios from 'axios';
     api.interceptors.response.use(
         (response) => response,
         (error) => {
-            if (error.response?.status === 401) {
+            const isRegister = error.config?.url?.includes('/register');
+            if (error.response?.status === 401 && !isRegister) {
                 localStorage.removeItem('authToken');
                 window.location.replace('/signin');
                 return new Promise(() => {}); // halt — never resolves so no error propagates
@@ -114,6 +115,27 @@ import axios from 'axios';
 
     export const tenantId = localStorage.getItem('tenantId') || "";
     export const clientId = localStorage.getItem('clientId') || "";
+
+
+    export const register = async (fullName, username, email, password, phone, tenantId) => {
+        try {
+            const response = await api.post('/api/v1/clients/register', {
+                username,
+                password,
+                email,
+                fullName,
+                phone,
+                tenant: { id: tenantId },
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+
+
+
 
     export const fetchData = async (endpoint) => {
         try {

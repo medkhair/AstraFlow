@@ -3,6 +3,7 @@ package com.astraflow.project.service.impl;
 
 import com.astraflow.project.model.Client;
 import com.astraflow.project.model.Tenant;
+import com.astraflow.project.model.enums.UserStatus;
 import com.astraflow.project.repository.ClientRepository;
 import com.astraflow.project.repository.TenantRepository;
 import com.astraflow.project.service.ClientService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +66,19 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new EntityNotFoundException("Tenant not found"));
             client.setTenant(managedTenant);
         }
+
+        if(clientRepository.existsByEmailAndTenantId(client.getEmail(), client.getTenant().getId())) {
+            throw new IllegalArgumentException("Email already exists for this tenant");
+        }
+        if(clientRepository.existsByUsernameAndTenantId(client.getUsername(), client.getTenant().getId())) {
+            throw new IllegalArgumentException("Username already exists for this tenant");
+        }
+        
+        BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+        client.setPassword(encoder.encode(client.getPassword()));
+        
+        client.setStatus(UserStatus.INACTIVE);        
+        
         return clientRepository.save(client);
     }
 
@@ -94,5 +109,15 @@ public class ClientServiceImpl implements ClientService {
         } else {
             return "fail";
         }
+	}
+	
+	public boolean verifyEmail(String email, UUID tenantId) {
+		
+		return clientRepository.existsByEmailAndTenantId(email, tenantId);
+	}
+	
+	public boolean verifyUsername(String username, UUID tenantId) {
+		
+		return clientRepository.existsByUsernameAndTenantId(username, tenantId);
 	}
 }

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuthentication'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { Login } from './pages/Login'
+import { Register } from './pages/Register'
 import { Home } from './pages/Home'
 import { PlayerPage } from './pages/Player'
 import { defaultFavorites } from './data/data'
@@ -53,6 +54,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/signin" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/*"
             element={
