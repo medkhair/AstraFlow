@@ -60,6 +60,9 @@ public abstract class User {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+    
+    @Column(nullable = false)
+    private boolean isEmailVerified;
 
 	public UUID getId() {
 		return id;
@@ -131,6 +134,14 @@ public abstract class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public boolean isEmailVerified() {
+		return isEmailVerified;
+	}
+
+	public void setEmailVerified(boolean isEmailVerified) {
+		this.isEmailVerified = isEmailVerified;
 	}
     
 	

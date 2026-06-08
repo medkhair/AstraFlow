@@ -3,11 +3,14 @@ package com.astraflow.project.service.impl;
 
 import com.astraflow.project.model.Client;
 import com.astraflow.project.model.Tenant;
+import com.astraflow.project.model.VerificationCode;
 import com.astraflow.project.model.enums.UserStatus;
 import com.astraflow.project.repository.ClientRepository;
 import com.astraflow.project.repository.TenantRepository;
 import com.astraflow.project.service.ClientService;
+import com.astraflow.project.service.EmailService;
 import com.astraflow.project.service.JwtService;
+import com.astraflow.project.service.VerificationCodeService;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,14 @@ public class ClientServiceImpl implements ClientService {
     private TenantRepository tenantRepository;
     
     @Autowired
+    private EmailService emailService;
+    
+    @Autowired
+    private VerificationCodeService verificationCodeService;
+    
+    @Autowired
     private AuthenticationManager authManager;
+    
     
     @Autowired
     private JwtService jwtService;
@@ -77,9 +87,14 @@ public class ClientServiceImpl implements ClientService {
         BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
         client.setPassword(encoder.encode(client.getPassword()));
         
-        client.setStatus(UserStatus.INACTIVE);        
+        client.setStatus(UserStatus.INACTIVE);  
+        client.setEmailVerified(false);
         
-        return clientRepository.save(client);
+        
+        Client savedClient = clientRepository.save(client);
+        VerificationCode verificationCode = verificationCodeService.createVerificationCode(savedClient);
+        emailService.sendVerificationEmail(savedClient.getEmail(), verificationCode.getCode());
+        return savedClient;
     }
 
     @Override

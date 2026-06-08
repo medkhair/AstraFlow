@@ -1,0 +1,5 @@
+# Application properties
+application.properties
+*.properties
+application.yml
+*.yml
