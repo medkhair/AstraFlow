@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.jspecify.annotations.Nullable;
+
 public interface ClientService {
 
     List<Client> findAll();
@@ -23,4 +25,7 @@ public interface ClientService {
     void deleteById(UUID id);
 
 	String verify(Client user);
+
+	@Nullable
+	Object isEmailVerified(UUID clientId);
 }

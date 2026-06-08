@@ -1,9 +1,12 @@
 package com.astraflow.project.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,29 +34,21 @@ public class VerificationController {
     private EmailService emailService;
 
     @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(
-            @RequestParam String code) {
-
+    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> body) {
+        String code = body.get("code");
         try {
-
             User user = verificationCodeService.verifyCode(code);
-
             user.setEmailVerified(true);
             userService.save(user);
-
             return ResponseEntity.ok("Email verified successfully");
-
         } catch (RuntimeException ex) {
-
-            return ResponseEntity.badRequest()
-                    .body(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
     @PostMapping("/resend-verification")
-    public ResponseEntity<?> resendVerificationCode(
-            @RequestParam String email) {
-
+    public ResponseEntity<?> resendVerificationCode(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
         User user = userService.findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));

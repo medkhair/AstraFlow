@@ -201,3 +201,49 @@ import axios from 'axios';
             const response = await api.get(`/api/v1/channel-categories/${categoryId}`, { headers: getAuthHeaders() });
             return response.data;
         };
+
+
+    /* is Email verified */
+
+        export const isEmailVerified = async (clientId) => {
+            try {
+                const response = await api.get(`/api/v1/clients/${clientId}/email-verified`, { headers: getAuthHeaders() });
+                return response.data.verified;
+            } catch (error) {
+                console.error('Error checking email verification:', error);
+                return false;
+            }
+        };
+
+    /* verify email */
+
+        export const verifyEmail = async (code) => {
+            try {
+                const response = await api.post(`/api/v1/auth/verify-email`, { code }, { headers: getAuthHeaders() });
+                return response.data;
+            } catch (error) {
+                console.error('Error verifying email:', error);
+                throw error;
+            }
+        };
+
+    /* resend verification email */
+
+        export const resendVerificationEmail = async (email) => {
+            try {
+                const response = await api.post(`/api/v1/auth/resend-verification`, { email }, { headers: getAuthHeaders() });
+                return response.data;
+            }
+            catch (error) {
+                console.error('Error resending verification email:', error);
+                throw error;
+            }
+        };
+
+    /* fetch plans */
+
+        export const fetchPlans = async () => {
+            const tid = localStorage.getItem('tenantId');
+            const response = await api.get(`/api/v1/plans/tenant/${tid}/active`, { headers: getAuthHeaders() });
+            return response.data;
+        }

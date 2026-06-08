@@ -3,6 +3,8 @@ package com.astraflow.project.controller;
 
 import com.astraflow.project.model.Client;
 import com.astraflow.project.service.ClientService;
+
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +70,8 @@ public class ClientController {
         return clientService.verify(user);
     }
 
-    
+    @GetMapping("/{clientId}/email-verified")
+    public ResponseEntity<@Nullable Object> isEmailVerified(@PathVariable UUID clientId) {
+        return ResponseEntity.ok(clientService.isEmailVerified(clientId));
+    }
 }

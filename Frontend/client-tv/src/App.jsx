@@ -2,10 +2,14 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuthentication'
 import { ProtectedRoute } from './routes/ProtectedRoute'
+import { WaitForAccessRoute } from './routes/WaitForAccessRoute'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { Home } from './pages/Home'
 import { PlayerPage } from './pages/Player'
+import { VerifyEmail } from './pages/VerifyEmail'
+import { ChoosePlan } from './pages/ChoosePlan'
+import { CheckOut } from './pages/CheckOut'
 import { defaultFavorites } from './data/data'
 import './App.css'
 
@@ -56,10 +60,36 @@ function App() {
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
+            path="/verify-email"
+            element={
+              <ProtectedRoute>
+                <VerifyEmail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/choose-plan"
+            element={
+              <ProtectedRoute>
+                <ChoosePlan />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckOut />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/*"
             element={
               <ProtectedRoute>
-                <MainContent />
+                <WaitForAccessRoute>
+                  <MainContent />
+                </WaitForAccessRoute>
               </ProtectedRoute>
             }
           />

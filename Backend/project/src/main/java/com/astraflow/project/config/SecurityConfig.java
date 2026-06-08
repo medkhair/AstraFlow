@@ -34,7 +34,7 @@ public class SecurityConfig {
 
 
 		http.csrf(customizer -> customizer.disable())
-			.authorizeHttpRequests(request -> request.requestMatchers("/api/v1/admins/login", "/api/v1/clients/login", "/api/v1/clients/register", "/api/v1/auth/verify-email", "/api/v1/auth/verify-email/*").permitAll().anyRequest().authenticated())
+			.authorizeHttpRequests(request -> request.requestMatchers("/api/v1/admins/login", "/api/v1/clients/login", "/api/v1/clients/register", "/api/v1/auth/verify-email", "/api/v1/auth/verify-email/*","/api/v1/clients/*/email-verified/").permitAll().anyRequest().authenticated())
 			.httpBasic(Customizer.withDefaults())
 			.authenticationProvider(authenticationProvider())
 			.sessionManagement( session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

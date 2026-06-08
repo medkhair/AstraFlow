@@ -13,6 +13,8 @@ import com.astraflow.project.service.JwtService;
 import com.astraflow.project.service.VerificationCodeService;
 
 import jakarta.persistence.EntityNotFoundException;
+
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -134,5 +136,12 @@ public class ClientServiceImpl implements ClientService {
 	public boolean verifyUsername(String username, UUID tenantId) {
 		
 		return clientRepository.existsByUsernameAndTenantId(username, tenantId);
+	}
+
+	@Override
+	public @Nullable Object isEmailVerified(UUID clientId) {
+        return clientRepository.findById(clientId)
+                .map(Client::isEmailVerified)
+                .orElse(null);
 	}
 }
