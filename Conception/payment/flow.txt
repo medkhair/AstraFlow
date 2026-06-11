@@ -1,0 +1,85 @@
+
+
+
+
+Frontend                          Backend                              Stripe
+   │                                 │                                    │
+   ├─ POST /stripe/create-payment-intent                                  │
+   │   { subscriptionId, currency }  │                                    │
+   │                                 ├─ Load Subscription via Service     │
+   │                                 ├─ Create PaymentIntent ────────────►│
+   │                                 │◄─────────── { id, clientSecret } ──┤
+   │                                 ├─ Save Payment (status=PENDING)     │
+   │◄── { clientSecret, intentId } ──┤                                    │
+   │                                 │                                    │
+   ├─ stripe.js confirmPayment(clientSecret) ──────────────────────────►  │
+   │                                 │                          Card charged
+
+
+
+
+
+
+
+Stripe                            Backend
+   │                                 │
+   ├─ POST /stripe/webhook ─────────►│
+   │   + Stripe-Signature header     │
+   │                                 ├─ 1. Verify HMAC signature
+   │                                 ├─ 2. Check ledger: event already seen?
+   │                                 │       YES → return immediately (idempotency)
+   │                                 │       NO  → continue
+   │                                 │
+   │                                 ├─ 3. Dispatch on event type:
+   │                                 │    payment_intent.succeeded → Payment PENDING→COMPLETED
+   │                                 │    payment_intent.payment_failed → Payment PENDING→FAILED
+   │                                 │    charge.refunded → Payment COMPLETED→REFUNDED
+   │                                 │    anything else → status=SKIPPED
+   │                                 │
+   │                                 ├─ 4. Compute hash chain:
+   │                                 │    previousHash = last ledger row's hash
+   │                                 │    hash = SHA-256(eventId|type|payload|status|prevHash)
+   │                                 │
+   │                                 └─ 5. Append to immutable ledger (INSERT only, no UPDATE/DELETE)
+   │◄── 200 OK ──────────────────────┤
+
+
+
+
+
+
+
+
+Frontend/Admin                    Backend                              Stripe
+   │                                 │                                    │
+   ├─ POST /stripe/refund/{paymentId}│                                    │
+   │                                 ├─ Load Payment by ID                │
+   │                                 ├─ Refund.create(paymentIntentId) ──►│
+   │                                 │◄─────────────────── Refund OK ──── │
+   │                                 ├─ Payment status → REFUNDED         │
+   │◄── 200 OK ──────────────────────┤                                    │
+   │                                 │                                    │
+   │                  (Stripe also fires charge.refunded webhook → ledger updated)
+
+
+
+
+
+Admin
+   │
+   ├─ GET /stripe/ledger/verify
+   │
+   │   Backend walks all ledger rows in processedAt order:
+   │   entry[0]: previousHash == "GENESIS"? ✓  hash recomputed == stored? ✓
+   │   entry[1]: previousHash == entry[0].hash? ✓  hash recomputed == stored? ✓
+   │   entry[n]: ...
+   │
+   └─ returns true (chain intact) or false (tampering detected)
+
+
+
+
+PENDING ──► COMPLETED
+        └─► FAILED
+COMPLETED ─► REFUNDED
+PENDING   ─► REFUNDED  (via direct refund endpoint)

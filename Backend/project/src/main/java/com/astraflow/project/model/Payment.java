@@ -116,7 +116,43 @@ public class Payment {
 	public void setPaidAt(LocalDateTime paidAt) {
 		this.paidAt = paidAt;
 	}
-    
-    
-    
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private UUID id;
+        private Subscription subscription;
+        private BigDecimal amount;
+        private String currency;
+        private PaymentMethod method;
+        private PaymentStatus status;
+        private String transactionId;
+        private LocalDateTime paidAt;
+
+        private Builder() {}
+
+        public Builder id(UUID id) { this.id = id; return this; }
+        public Builder subscription(Subscription subscription) { this.subscription = subscription; return this; }
+        public Builder amount(BigDecimal amount) { this.amount = amount; return this; }
+        public Builder currency(String currency) { this.currency = currency; return this; }
+        public Builder method(PaymentMethod method) { this.method = method; return this; }
+        public Builder status(PaymentStatus status) { this.status = status; return this; }
+        public Builder transactionId(String transactionId) { this.transactionId = transactionId; return this; }
+        public Builder paidAt(LocalDateTime paidAt) { this.paidAt = paidAt; return this; }
+
+        public Payment build() {
+            Payment payment = new Payment();
+            payment.id = this.id;
+            payment.subscription = this.subscription;
+            payment.amount = this.amount;
+            payment.currency = this.currency;
+            payment.method = this.method;
+            payment.status = this.status;
+            payment.transactionId = this.transactionId;
+            payment.paidAt = this.paidAt;
+            return payment;
+        }
+    }
 }
