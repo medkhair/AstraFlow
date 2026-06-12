@@ -247,3 +247,21 @@ import axios from 'axios';
             const response = await api.get(`/api/v1/plans/tenant/${tid}/active`, { headers: getAuthHeaders() });
             return response.data;
         }
+
+    /* stripe checkout session */
+
+        /* create payment intent */
+
+            export const createCheckoutSession = async ({planId, clientId}) => {
+                try {
+                    const response = await api.post(`/api/v1/stripe/create-payment-intent `, { planId, clientId }, { headers: getAuthHeaders() }); 
+                    return response.data;
+                } catch (error) {
+                    console.error('Error creating checkout session:', error);
+                    throw error;
+                }
+            };
+
+            
+
+        

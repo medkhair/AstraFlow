@@ -33,6 +33,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.astraflow.project.model.Client;
+import com.astraflow.project.model.Plan;
+import com.astraflow.project.model.enums.SubscriptionStatus;
+import com.astraflow.project.service.ClientService;
+import com.astraflow.project.service.PlanService;
+import java.time.LocalDate;
+
 @Service
 public class StripePaymentService {
 
@@ -51,6 +58,12 @@ public class StripePaymentService {
     @Autowired
     private StripePaymentEventLedgerRepository ledgerRepository;
 
+    @Autowired
+    private PlanService planService;
+
+    @Autowired
+    private ClientService clientService;
+
     @PostConstruct
     public void init() {
         Stripe.apiKey = secretKey;
@@ -62,10 +75,12 @@ public class StripePaymentService {
      */
     @Transactional
     public PaymentIntentResponse createPaymentIntent(CreatePaymentIntentRequest request) throws StripeException {
-        Subscription subscription = subscriptionService.findById(request.subscriptionId())
-                .orElseThrow(() -> new IllegalArgumentException("Subscription not found: " + request.subscriptionId()));
+        Plan plan = planService.findById(request.planId())
+                .orElseThrow(() -> new IllegalArgumentException("Plan not found: " + request.planId()));
+        clientService.findById(request.clientId())
+                .orElseThrow(() -> new IllegalArgumentException("Client not found: " + request.clientId()));
 
-        BigDecimal price = subscription.getPlan().getPrice();
+        BigDecimal price = plan.getPrice();
         String currency = (request.currency() != null && !request.currency().isBlank())
                 ? request.currency().toLowerCase()
                 : "usd";
@@ -74,7 +89,8 @@ public class StripePaymentService {
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(amountInCents)
                 .setCurrency(currency)
-                .putMetadata("subscriptionId", subscription.getId().toString())
+                .putMetadata("planId", plan.getId().toString())
+                .putMetadata("clientId", request.clientId().toString())
                 .setAutomaticPaymentMethods(
                         PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
                                 .setEnabled(true)
@@ -84,7 +100,6 @@ public class StripePaymentService {
         PaymentIntent paymentIntent = PaymentIntent.create(params);
 
         Payment payment = Payment.builder()
-                .subscription(subscription)
                 .amount(price)
                 .currency(currency.toUpperCase())
                 .method(PaymentMethod.STRIPE)
@@ -167,7 +182,26 @@ public class StripePaymentService {
     // ── Private event handlers ────────────────────────────────────────────────
 
     private void handlePaymentIntentSucceeded(PaymentIntent pi) {
+        String planIdStr = pi.getMetadata().get("planId");
+        String clientIdStr = pi.getMetadata().get("clientId");
+
+        if (planIdStr == null || clientIdStr == null) return;
+
+        Plan plan = planService.findById(UUID.fromString(planIdStr)).orElse(null);
+        Client client = clientService.findById(UUID.fromString(clientIdStr)).orElse(null);
+
+        if (plan == null || client == null) return;
+
+        Subscription subscription = new Subscription();
+        subscription.setClient(client);
+        subscription.setPlan(plan);
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setStartDate(LocalDate.now());
+        subscription.setEndDate(LocalDate.now().plusDays(plan.getDurationDays()));
+        subscriptionService.save(subscription);
+
         paymentService.findByTransactionId(pi.getId()).ifPresent(payment -> {
+            payment.setSubscription(subscription);
             payment.setStatus(PaymentStatus.COMPLETED);
             payment.setPaidAt(LocalDateTime.now());
             paymentService.save(payment);

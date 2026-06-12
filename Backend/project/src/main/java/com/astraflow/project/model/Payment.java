@@ -31,7 +31,7 @@ public class Payment {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_id", nullable = false)
+    @JoinColumn(name = "subscription_id", nullable = true)
     private Subscription subscription;
 
     @Column(nullable = false, precision = 10, scale = 2)
