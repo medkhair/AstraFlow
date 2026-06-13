@@ -29,9 +29,8 @@
    ============================================================ */
 
 .login-screen {
-  min-height: 100vh;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   background: var(--bg);
   background-image:

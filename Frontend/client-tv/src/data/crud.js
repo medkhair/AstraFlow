@@ -2,7 +2,10 @@ import axios from 'axios';
 // import Cookies from 'js-cookie';
 
     const api = axios.create({
-        baseURL: import.meta.env.VITE_API_BASE_URL
+        baseURL: import.meta.env.VITE_API_BASE_URL,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
     });
 
     const getAuthHeaders = () => {
@@ -208,7 +211,7 @@ import axios from 'axios';
         export const isEmailVerified = async (clientId) => {
             try {
                 const response = await api.get(`/api/v1/clients/${clientId}/email-verified`, { headers: getAuthHeaders() });
-                return response.data.verified;
+                return response.data;
             } catch (error) {
                 console.error('Error checking email verification:', error);
                 return false;
@@ -254,7 +257,7 @@ import axios from 'axios';
 
             export const createCheckoutSession = async ({planId, clientId}) => {
                 try {
-                    const response = await api.post(`/api/v1/stripe/create-payment-intent `, { planId, clientId }, { headers: getAuthHeaders() }); 
+                    const response = await api.post(`/api/v1/stripe/create-payment-intent`, { planId, clientId }, { headers: getAuthHeaders() }); 
                     return response.data;
                 } catch (error) {
                     console.error('Error creating checkout session:', error);

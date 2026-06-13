@@ -1,4 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { createCheckoutSession } from '../data/crud';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const Logo = () => (
   <svg className="login-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -18,18 +24,88 @@ function getSelectedPlan() {
   }
 }
 
+function PaymentForm({ selectedPlan, navigate }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+    setError(null);
+
+    const { error: confirmError } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/checkout`,
+      },
+      redirect: 'if_required',
+    });
+
+    if (confirmError) {
+      setError(confirmError.message);
+      setLoading(false);
+    } else {
+      localStorage.setItem('checkout_completed', 'true');
+      navigate('/', { replace: true });
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <PaymentElement />
+      {error && <p className="login-error" style={{ margin: 0 }}>{error}</p>}
+      <button className="login-btn" type="submit" disabled={!stripe || loading} style={{ width: '100%' }}>
+        {loading ? <span className="login-spinner" /> : `Pay $${selectedPlan.price}`}
+      </button>
+    </form>
+  );
+}
+
 export function CheckOut() {
   const selectedPlan = getSelectedPlan();
   const navigate = useNavigate();
+  const [clientSecret, setClientSecret] = useState(null);
+  const [intentError, setIntentError] = useState(null);
+
+  // Handle redirect return from Stripe (for redirect-based payment methods)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const redirectStatus = params.get('redirect_status');
+    if (redirectStatus === 'succeeded') {
+      localStorage.setItem('checkout_completed', 'true');
+      navigate('/', { replace: true });
+    } else if (redirectStatus) {
+      setIntentError('Payment was not completed. Please try again.');
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!selectedPlan) return;
+    const planId = selectedPlan.id;
+    const clientId = localStorage.getItem('clientId');
+    createCheckoutSession({ planId, clientId })
+      .then((data) => {
+        console.log('[CheckOut] payment intent response:', data);
+        const secret = data.clientSecret ?? data.client_secret;
+        if (!secret) {
+          setIntentError('No client secret returned from server.');
+        } else {
+          setClientSecret(secret);
+        }
+      })
+      .catch((err) => {
+        console.error('[CheckOut] createCheckoutSession error:', err?.response ?? err);
+        setIntentError('Failed to initialize payment. Please try again.');
+      });
+  }, []);
 
   if (!selectedPlan) {
     return <Navigate to="/choose-plan" replace />;
   }
-
-  const handleCompletePayment = () => {
-    localStorage.setItem('checkout_completed', 'true');
-    navigate('/', { replace: true });
-  };
 
   return (
     <div className="login-screen">
@@ -88,11 +164,21 @@ export function CheckOut() {
           </div>
         </div>
 
-        <button className="login-btn" onClick={handleCompletePayment} style={{ width: '100%' }}>
-          Complete Payment
-        </button>
+        {intentError && (
+          <p className="login-error" style={{ marginBottom: 16 }}>{intentError}</p>
+        )}
 
-        <p style={{ textAlign: 'center', marginTop: 12, fontSize: 12, color: 'var(--text-muted)' }}>
+        {clientSecret ? (
+          <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'night' } }}>
+            <PaymentForm selectedPlan={selectedPlan} navigate={navigate} />
+          </Elements>
+        ) : !intentError ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
+            <span className="login-spinner" />
+          </div>
+        ) : null}
+
+        <p style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: 'var(--text-muted)' }}>
           By continuing you agree to our terms of service.
         </p>
 

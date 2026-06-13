@@ -1,8 +1,17 @@
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { hasVerifiedEmail, hasSelectedPlan, hasCompletedCheckout } from '../data/guards';
 
 export function WaitForAccessRoute({ children }) {
-  if (!hasVerifiedEmail()) {
+  const [verified, setVerified] = useState(null);
+
+  useEffect(() => {
+    hasVerifiedEmail().then(setVerified);
+  }, []);
+
+  if (verified === null) return null;
+
+  if (!verified) {
     return <Navigate to="/verify-email" replace />;
   }
   if (!hasSelectedPlan()) {

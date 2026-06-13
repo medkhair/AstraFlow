@@ -1,14 +1,20 @@
-import { useState } from 'react';
-import { verifyEmail, resendVerificationEmail } from '../data/crud';
+import { useState, useEffect } from 'react';
+import { verifyEmail, resendVerificationEmail, isEmailVerified } from '../data/crud';
 import { useAuth } from './useAuthentication';
 
 export function useVerification() {
   const { user } = useAuth();
-  const [isVerified, setIsVerified] = useState(
-    localStorage.getItem('email_verified') === 'true'
-  );
+  const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const clientId = localStorage.getItem('clientId');
+    if (!clientId) return;
+    isEmailVerified(clientId).then((verified) => {
+      if (verified) setIsVerified(true);
+    });
+  }, []);
 
   const verifyOtp = async (code) => {
     setLoading(true);

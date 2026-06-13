@@ -20,7 +20,7 @@ export function ChoosePlan() {
   };
 
   return (
-    <div className="login-screen" style={{ alignItems: 'flex-start' }}>
+    <div className="login-screen">
       <div style={{ width: '100%', maxWidth: 720 }}>
         <div className="login-logo" style={{ justifyContent: 'center', marginBottom: 8 }}>
           <Logo />
