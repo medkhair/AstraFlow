@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +49,19 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public Plan save(Plan plan) {
+
+        if (plan.getPlanType() == PlanType.MONTHLY) {
+            long durationDays = LocalDate.now().plusMonths(1).toEpochDay()
+                  - LocalDate.now().toEpochDay();
+            plan.setDurationDays((int) durationDays);
+        }
+
+        if (plan.getPlanType() == PlanType.YEARLY) {
+            long durationDays = LocalDate.now().plusYears(1).toEpochDay()
+                  - LocalDate.now().toEpochDay();
+            plan.setDurationDays((int) durationDays);
+        }
+
         return planRepository.save(plan);
     }
 

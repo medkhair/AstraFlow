@@ -22,4 +22,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, UUID
     List<Subscription> findByEndDateBefore(LocalDate date);
 
     List<Subscription> findByStatus(SubscriptionStatus status);
+
+    boolean existsByClientIdAndStatus(UUID clientId, SubscriptionStatus status);
 }

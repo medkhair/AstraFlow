@@ -22,6 +22,7 @@ import com.stripe.param.RefundCreateParams;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,15 +87,29 @@ public class StripePaymentService {
                 : "usd";
         long amountInCents = price.multiply(BigDecimal.valueOf(100)).longValue();
 
+        Client client = clientService.findById(request.clientId()).orElseThrow(
+                () -> new IllegalArgumentException("Client not found: " + request.clientId()));
+
+        String stripeCustomerId = client.getStripeCustomerId();
+        if (stripeCustomerId == null) {
+            com.stripe.model.Customer customer = com.stripe.model.Customer.create(
+                com.stripe.param.CustomerCreateParams.builder()
+                    .setEmail(client.getEmail())
+                    .setName(client.getFullName())
+                    .build()
+            );
+            stripeCustomerId = customer.getId();
+            client.setStripeCustomerId(stripeCustomerId);
+            clientService.update(client.getId(), client);
+        }
+
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(amountInCents)
                 .setCurrency(currency)
+                .setCustomer(stripeCustomerId)         // ← attach to customer
+                .setSetupFutureUsage(PaymentIntentCreateParams.SetupFutureUsage.OFF_SESSION) // ← save for later
                 .putMetadata("planId", plan.getId().toString())
                 .putMetadata("clientId", request.clientId().toString())
-                .setAutomaticPaymentMethods(
-                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
-                                .setEnabled(true)
-                                .build())
                 .build();
 
         PaymentIntent paymentIntent = PaymentIntent.create(params);
@@ -182,8 +197,10 @@ public class StripePaymentService {
     // ── Private event handlers ────────────────────────────────────────────────
 
     private void handlePaymentIntentSucceeded(PaymentIntent pi) {
+        
         String planIdStr = pi.getMetadata().get("planId");
         String clientIdStr = pi.getMetadata().get("clientId");
+        String subscriptionIdStr = pi.getMetadata().get("subscriptionId");
 
         if (planIdStr == null || clientIdStr == null) return;
 
@@ -192,20 +209,39 @@ public class StripePaymentService {
 
         if (plan == null || client == null) return;
 
-        Subscription subscription = new Subscription();
-        subscription.setClient(client);
-        subscription.setPlan(plan);
-        subscription.setStatus(SubscriptionStatus.ACTIVE);
-        subscription.setStartDate(LocalDate.now());
-        subscription.setEndDate(LocalDate.now().plusDays(plan.getDurationDays()));
-        subscriptionService.save(subscription);
+        if (pi.getPaymentMethod() != null) {
+            client.setStripePaymentMethodId(pi.getPaymentMethod());
+            clientService.update(client.getId(), client);
+        }
 
-        paymentService.findByTransactionId(pi.getId()).ifPresent(payment -> {
-            payment.setSubscription(subscription);
-            payment.setStatus(PaymentStatus.COMPLETED);
-            payment.setPaidAt(LocalDateTime.now());
-            paymentService.save(payment);
-        });
+        if (subscriptionIdStr != null) {
+            // Renewal — extend existing subscription
+            subscriptionService.findById(UUID.fromString(subscriptionIdStr)).ifPresent(sub -> {
+                sub.setEndDate(sub.getEndDate().plusDays(sub.getPlan().getDurationDays()));
+                subscriptionService.save(sub);
+            });
+            paymentService.findByTransactionId(pi.getId()).ifPresent(payment -> {
+                payment.setStatus(PaymentStatus.COMPLETED);
+                payment.setPaidAt(LocalDateTime.now());
+                paymentService.save(payment);
+            });
+        } else {
+            // First payment — create new subscription
+            Subscription subscription = new Subscription();
+            subscription.setClient(client);
+            subscription.setPlan(plan);
+            subscription.setStatus(SubscriptionStatus.ACTIVE);
+            subscription.setStartDate(LocalDate.now());
+            subscription.setEndDate(LocalDate.now().plusDays(plan.getDurationDays()));
+            subscriptionService.save(subscription);
+
+            paymentService.findByTransactionId(pi.getId()).ifPresent(payment -> {
+                payment.setSubscription(subscription);
+                payment.setStatus(PaymentStatus.COMPLETED);
+                payment.setPaidAt(LocalDateTime.now());
+                paymentService.save(payment);
+            });
+        }
     }
 
     private void handlePaymentIntentFailed(PaymentIntent pi) {
@@ -294,5 +330,60 @@ public class StripePaymentService {
                                 "Failed to deserialize " + type.getSimpleName() + " (API version mismatch?)", e);
                     }
                 });
+    }
+
+    @Transactional
+    public void payMounthlySubscription(Subscription subscription) throws StripeException {
+        if (subscription.getStatus() != SubscriptionStatus.ACTIVE) {
+            throw new IllegalStateException("Subscription is not active: " + subscription.getId());
+        }
+
+        Plan plan = subscription.getPlan();
+        BigDecimal price = plan.getPrice();
+        String currency = "usd"; // Assuming USD for simplicity
+        long amountInCents = price.multiply(BigDecimal.valueOf(100)).longValue();
+
+        Client client = subscription.getClient();
+        if (client.getStripeCustomerId() == null || client.getStripePaymentMethodId() == null) {
+            throw new IllegalStateException("Client does not have Stripe customer/payment method IDs: " + client.getId());
+        }
+
+        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                .setAmount(amountInCents)
+                .setCurrency(currency)
+                .setCustomer(client.getStripeCustomerId())         // ← stored on Client
+                .setPaymentMethod(client.getStripePaymentMethodId()) // ← stored on Client
+                .setConfirm(true)                                  // ← charge immediately
+                .setOffSession(true)                               // ← no user present
+                .putMetadata("planId", plan.getId().toString())
+                .putMetadata("clientId", subscription.getClient().getId().toString())
+                .putMetadata("subscriptionId", subscription.getId().toString())
+                .build();
+        PaymentIntent paymentIntent = PaymentIntent.create(params);
+
+        Payment payment = Payment.builder()
+                .amount(price)
+                .currency(currency.toUpperCase())
+                .method(PaymentMethod.STRIPE)
+                .status(PaymentStatus.PENDING)
+                .transactionId(paymentIntent.getId())
+                .subscription(subscription)
+                .build();
+        paymentService.save(payment);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
+    public void processMonthlySubscriptions() {
+        List<Subscription> activeSubscriptions = subscriptionService.findByStatus(SubscriptionStatus.ACTIVE);
+        for (Subscription subscription : activeSubscriptions) {
+            if (subscription.getEndDate().isBefore(LocalDate.now())) {
+                try {
+                    payMounthlySubscription(subscription);
+                } catch (StripeException e) {
+                    // Log the error and continue processing other subscriptions
+                    System.err.println("Failed to process payment for subscription " + subscription.getId() + ": " + e.getMessage());
+                }
+            }
+        }
     }
 }

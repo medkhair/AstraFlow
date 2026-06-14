@@ -24,4 +24,16 @@ public interface SubscriptionService {
     Subscription update(UUID id, Subscription subscription);
 
     void deleteById(UUID id);
+
+    boolean isSubscriptionActive(UUID clientId);
+
+    boolean isSubscriptionExpiringSoon(UUID clientId, int daysThreshold);
+
+    boolean isSubscribed(UUID clientId);
+
+    boolean hasSubscriptionExpired(UUID clientId);
+
+    boolean isSubscriptionPaid(UUID clientId);
+    
+    
 }

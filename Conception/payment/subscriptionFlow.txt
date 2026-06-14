@@ -1,0 +1,15 @@
+First payment:
+  createPaymentIntent()
+    → create Stripe Customer → save stripeCustomerId on Client
+    → create PaymentIntent with setup_future_usage=off_session
+
+  Frontend confirms payment (user enters card)
+
+  Webhook: payment_intent.succeeded
+    → save pi.getPaymentMethod() as stripePaymentMethodId on Client
+    → create Subscription
+
+Monthly renewal (scheduler):
+  payMounthlySubscription()
+    → use stripeCustomerId + stripePaymentMethodId
+    → setConfirm(true) + setOffSession(true) → charged immediately

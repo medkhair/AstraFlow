@@ -20,19 +20,39 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class Client extends User {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false)
-    private Tenant tenant;
-    
-    
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "tenant_id", nullable = false)
+        private Tenant tenant;
 
-	public Tenant getTenant() {
-		return tenant;
-	}
+        @Column(name= "stripe_customer_id", unique = true)
+        private String stripeCustomerId;
 
-	public void setTenant(Tenant tenant) {
-		this.tenant = tenant;
-	}
+        @Column(name="stripe_payment_method_id", unique = true)
+        private String stripePaymentMethodId;
+
+        public Tenant getTenant() {
+                return tenant;
+        }
+
+        public void setTenant(Tenant tenant) {
+                this.tenant = tenant;
+        }
+
+        public String getStripeCustomerId() {
+                return stripeCustomerId;
+        }
+
+        public void setStripeCustomerId(String stripeCustomerId) {
+                this.stripeCustomerId = stripeCustomerId;
+        }
+
+        public String getStripePaymentMethodId() {
+                return stripePaymentMethodId;
+        }
+
+        public void setStripePaymentMethodId(String stripePaymentMethodId) {
+                this.stripePaymentMethodId = stripePaymentMethodId;
+        }
 
 	
 	

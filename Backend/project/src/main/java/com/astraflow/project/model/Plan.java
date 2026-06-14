@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.ArrayList;
 
 @Entity
 @Table(
@@ -48,6 +49,19 @@ public class Plan {
 
     @Column(nullable = false)
     private Boolean isActive;
+
+	@ElementCollection
+	@CollectionTable(name = "plan_features", joinColumns = @JoinColumn(name = "plan_id"))
+	@Column(name = "feature")
+	private ArrayList<String> features;
+
+	public ArrayList<String> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(ArrayList<String> features) {
+		this.features = features;
+	}
 
 	public UUID getId() {
 		return id;
