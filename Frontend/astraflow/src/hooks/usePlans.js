@@ -10,6 +10,7 @@ function normalize(p) {
     plan_type: p.planType ?? p.plan_type,
     max_connections: p.maxConnections ?? p.max_connections,
     is_active: p.isActive ?? p.is_active,
+    features: p.features ?? [],
   };
 }
 
@@ -22,6 +23,7 @@ function toApiPayload(form) {
     maxConnections: Number(form.max_connections),
     isActive: form.is_active,
     tenant: { id: tenantId },
+    features: form.features.filter(f => f.trim() !== "")
   };
 }
 

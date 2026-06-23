@@ -10,12 +10,17 @@ const defaultForm = {
   plan_type: "MONTHLY",
   max_connections: "1",
   is_active: true,
+  features: [],
 }
 
 export function PlanModal({ open, onClose, onSubmit, initial }) {
   const [form, setForm] = useState(defaultForm)
   const [errors, setErrors] = useState({})
   const isEdit = Boolean(initial)
+
+  console.log("Initial plan data:", initial) // Debug log to check initial data
+  console.log("Form state on open:", form) // Debug log to check form state when modal opens
+
 
   useEffect(() => {
     if (open) {
@@ -28,6 +33,7 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
               plan_type: initial.plan_type ?? "IPTV",
               max_connections: initial.max_connections ?? "1",
               is_active: initial.is_active ?? true,
+              features: initial.features ?? [],
             }
           : defaultForm
       )
@@ -66,6 +72,7 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
       plan_type: form.plan_type,
       max_connections: Number(form.max_connections),
       is_active: form.is_active,
+      features: form.features.filter(f => f.trim() !== ""),
     })
     onClose()
   }
@@ -208,6 +215,54 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
                 Active
               </label>
             </div>
+          </div>
+
+          {/* Features section */}
+          <div className="px-6 py-5 border-t border-border">
+            <h3 className="text-sm font-medium text-foreground mb-2">Features</h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              Enter the features that will be included in this plan.
+            </p>
+            {/* Features text iputs would go here */}
+            <div className="flex flex-col gap-2">
+              {
+              form.features.map((feat, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={feat}
+                    onChange={
+                      (e) => {
+                      const newFeats = [...form.features]
+                      newFeats[idx] = e.target.value
+                      setForm((prev) => ({ ...prev, features: newFeats }))
+                    }}
+                    placeholder={`Feature ${idx + 1}`}
+                    className="flex-1 h-10 rounded-lg bg-background px-3 text-sm ring-1 ring-border outline-none focus:ring-brand"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newFeats = form.features.filter((_, i) => i !== idx)
+                      setForm((prev) => ({ ...prev, features: newFeats }))
+                    }}
+                    className="rounded-full p-1.5 hover:bg-muted transition-colors"
+                    aria-label={`Remove feature ${idx + 1}`}
+                  >   
+                    <X className="size-4 text-muted-foreground" />
+                  </button>
+                </div>
+              ))
+            }
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, features: [...prev.features, ""] }))}
+                className="self-start rounded-lg bg-muted px-3 py-1 text-sm hover:bg-muted/80 transition-colors"
+              >
+                + Add Feature
+              </button>
+            </div>
+
           </div>
 
           {/* Footer */}
