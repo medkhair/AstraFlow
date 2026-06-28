@@ -108,4 +108,5 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	public boolean isSubscriptionPaid(UUID clientId) {
 		return subscriptionRepository.findByClientIdAndStatus(clientId, SubscriptionStatus.ACTIVE).isPresent();
 	}
+
 }

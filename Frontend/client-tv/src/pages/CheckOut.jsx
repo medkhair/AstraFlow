@@ -3,8 +3,30 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { createCheckoutSession } from '../data/crud';
+import { hasCompletedCheckout } from '../data/guards';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+/*
+const ifHasCompletedCheckout = async () => {
+  const completed = await hasCompletedCheckout();
+  console.log("Checkout completed status:", completed);
+  if (completed) {
+    console.log("Checkout already completed, redirecting to /.");
+    return <Navigate to="/" replace />;
+  }
+}
+
+ifHasCompletedCheckout().then((redirect) => {
+  if (redirect) {
+    // This is a placeholder for handling the redirect in a real application.
+    console.log("Redirecting to / because checkout is already completed.");
+  }
+}
+)
+*/
+
+
+
 
 const Logo = () => (
   <svg className="login-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,7 +72,9 @@ function PaymentForm({ selectedPlan, navigate }) {
       setLoading(false);
     } else {
       localStorage.setItem('checkout_completed', 'true');
-      navigate('/', { replace: true });
+      setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 2000); // Delay to allow Stripe to process the payment
     }
   };
 
@@ -70,6 +94,19 @@ export function CheckOut() {
   const navigate = useNavigate();
   const [clientSecret, setClientSecret] = useState(null);
   const [intentError, setIntentError] = useState(null);
+  const [completed, setCompleted] = useState(false);
+
+  useEffect(() => {
+    async function check() {
+      setCompleted(await hasCompletedCheckout());
+    }
+
+    check();
+  }, []);
+
+  if (completed) {
+    navigate('/', { replace: true });
+  }
 
   // Handle redirect return from Stripe (for redirect-based payment methods)
   useEffect(() => {

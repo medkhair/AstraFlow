@@ -63,4 +63,19 @@ public class SubscriptionController {
         subscriptionService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @GetMapping("/client/{clientId}/subscribed")
+    public ResponseEntity<Boolean> isClientSubscribed(@PathVariable UUID clientId) {
+        boolean isSubscribed = subscriptionService.isSubscribed(clientId);
+        return ResponseEntity.ok(isSubscribed);
+    }
+
+    @GetMapping("/client/{clientId}/active-subscription")
+    public ResponseEntity<Boolean> getActiveSubscription(@PathVariable UUID clientId) {
+        boolean isSubscriptionActive = subscriptionService.isSubscriptionActive(clientId);
+
+        return ResponseEntity.ok(isSubscriptionActive);
+    }
+
 }

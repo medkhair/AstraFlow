@@ -1,4 +1,4 @@
-import { isEmailVerified } from './crud';
+import { isEmailVerified, fetchSubscriptionStatus } from './crud';
 
 export const hasVerifiedEmail = async () => {
   const clientId = localStorage.getItem('clientId');
@@ -6,4 +6,10 @@ export const hasVerifiedEmail = async () => {
   return await isEmailVerified(clientId);
 };
 export const hasSelectedPlan = () => !!localStorage.getItem('selected_plan');
-export const hasCompletedCheckout = () => localStorage.getItem('checkout_completed') === 'true';
+
+export const hasCompletedCheckout = async () => {
+  const clientId = localStorage.getItem('clientId');
+  if (!clientId) return false;
+  const subscriptionStatus = await fetchSubscriptionStatus(clientId);
+  return subscriptionStatus;
+}

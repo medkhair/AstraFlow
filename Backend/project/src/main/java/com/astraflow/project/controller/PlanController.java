@@ -63,4 +63,6 @@ public class PlanController {
         planService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    
 }

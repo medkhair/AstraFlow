@@ -265,6 +265,22 @@ import axios from 'axios';
                 }
             };
 
+
+    /* fetch subscription status */
+
+        /* is subscribed */
+            
+            export const fetchSubscriptionStatus = async (clientId) => {
+                try {
+                    const response = await api.get(`/api/v1/subscriptions/client/${clientId}/subscribed`, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error fetching subscription status:', error);
+                    throw error;
+                }
+            };
+
             
 
         
