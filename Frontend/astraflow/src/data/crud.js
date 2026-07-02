@@ -2,14 +2,16 @@ import axios from 'axios';
 // import Cookies from 'js-cookie';
 
     const api = axios.create({
-        baseURL: import.meta.env.VITE_API_BASE_URL
+        baseURL: import.meta.env.VITE_API_BASE_URL,
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
 
     const getAuthHeaders = () => {
         const token = localStorage.getItem('authToken');
         return token ? { Authorization: `Bearer ${token}` } : {};
     };
-
 
     api.interceptors.response.use(
         (response) => response,
@@ -21,8 +23,8 @@ import axios from 'axios';
             }
             return Promise.reject(error);
         }
- );
-
+    );
+    
     // login and token management
     export const login = async (username, password) => {
         try {

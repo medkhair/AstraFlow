@@ -33,7 +33,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 
-		http.csrf(customizer -> customizer.disable())
+		http
+			.cors(Customizer.withDefaults()) 
+			.csrf(customizer -> customizer.disable())
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(
 					"/api/v1/admins/login",
