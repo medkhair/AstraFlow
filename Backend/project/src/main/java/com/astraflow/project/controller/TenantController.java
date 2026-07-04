@@ -58,4 +58,6 @@ public class TenantController {
         tenantService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    
 }

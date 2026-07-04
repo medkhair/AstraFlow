@@ -1,7 +1,7 @@
 package com.astraflow.project.payment.stripe;
 
-import com.astraflow.project.dto.CreatePaymentIntentRequest;
-import com.astraflow.project.dto.PaymentIntentResponse;
+import com.astraflow.project.dto.request.CreatePaymentIntentRequest;
+import com.astraflow.project.dto.response.PaymentIntentResponse;
 import com.astraflow.project.model.Payment;
 import com.astraflow.project.model.Subscription;
 import com.astraflow.project.model.enums.PaymentMethod;
