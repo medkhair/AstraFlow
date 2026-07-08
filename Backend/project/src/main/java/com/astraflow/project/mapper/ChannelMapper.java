@@ -7,7 +7,7 @@ import com.astraflow.project.model.ChannelCategory;
 import com.astraflow.project.model.Tenant;
 
 public class ChannelMapper {
-
+/*
     private ChannelMapper() {
     }
 
@@ -52,4 +52,6 @@ public class ChannelMapper {
                 .status(channel.getStatus())
                 .build();
     }
+    
+*/
 }

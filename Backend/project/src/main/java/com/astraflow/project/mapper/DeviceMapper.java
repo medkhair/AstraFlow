@@ -6,7 +6,7 @@ import com.astraflow.project.model.Client;
 import com.astraflow.project.model.Device;
 
 public class DeviceMapper {
-
+/*
     private DeviceMapper() {
     }
 
@@ -41,4 +41,6 @@ public class DeviceMapper {
                 .createdAt(device.getCreatedAt())
                 .build();
     }
+    
+*/
 }

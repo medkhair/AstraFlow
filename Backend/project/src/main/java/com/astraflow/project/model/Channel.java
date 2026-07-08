@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(
         name = "channels",
@@ -27,6 +30,7 @@ public class Channel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ChannelCategory category;
 
     @Column(nullable = false, length = 255)

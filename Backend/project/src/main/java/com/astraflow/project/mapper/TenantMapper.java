@@ -5,7 +5,7 @@ import com.astraflow.project.dto.response.TenantResponse;
 import com.astraflow.project.model.Tenant;
 
 public final class TenantMapper {
-
+/*
     private TenantMapper() {
     }
 
@@ -39,4 +39,5 @@ public final class TenantMapper {
                 .updatedAt(tenant.getUpdatedAt())
                 .build();
     }
+*/
 }

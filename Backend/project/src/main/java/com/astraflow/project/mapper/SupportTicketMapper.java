@@ -8,7 +8,7 @@ import com.astraflow.project.model.SupportTicket;
 import com.astraflow.project.model.Tenant;
 
 public class SupportTicketMapper {
-
+/*
     private SupportTicketMapper() {
     }
 
@@ -57,4 +57,5 @@ public class SupportTicketMapper {
                 .updatedAt(ticket.getUpdatedAt())
                 .build();
     }
+*/
 }

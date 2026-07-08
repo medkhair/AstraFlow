@@ -3,7 +3,7 @@ package com.astraflow.project.mapper;
 import com.astraflow.project.model.User;
 
 public class DtoMapperUtils {
-
+/*
     private DtoMapperUtils() {
     }
 
@@ -24,4 +24,5 @@ public class DtoMapperUtils {
         user.setPhone(phone);
         user.setUsername(username);
     }
+*/
 }

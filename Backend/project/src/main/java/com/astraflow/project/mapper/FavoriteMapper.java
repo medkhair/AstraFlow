@@ -7,7 +7,7 @@ import com.astraflow.project.model.Client;
 import com.astraflow.project.model.Favorite;
 
 public class FavoriteMapper {
-
+/*
     private FavoriteMapper() {
     }
 
@@ -40,4 +40,6 @@ public class FavoriteMapper {
                 .createdAt(favorite.getCreatedAt())
                 .build();
     }
+    
+ */
 }

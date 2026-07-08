@@ -8,7 +8,7 @@ import com.astraflow.project.model.User;
 import com.astraflow.project.model.Client;
 
 public class AuditLogMapper {
-
+/*
     private AuditLogMapper() {
     }
 
@@ -52,4 +52,5 @@ public class AuditLogMapper {
                 .createdAt(auditLog.getCreatedAt())
                 .build();
     }
+   */
 }

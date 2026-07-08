@@ -6,7 +6,7 @@ import com.astraflow.project.model.Branding;
 import com.astraflow.project.model.Tenant;
 
 public class BrandingMapper {
-
+/*
     private BrandingMapper() {
     }
 
@@ -54,4 +54,5 @@ public class BrandingMapper {
                 .customJs(branding.getCustomJs())
                 .build();
     }
+   */
 }

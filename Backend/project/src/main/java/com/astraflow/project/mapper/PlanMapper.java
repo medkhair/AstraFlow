@@ -6,7 +6,7 @@ import com.astraflow.project.model.Plan;
 import com.astraflow.project.model.Tenant;
 
 public class PlanMapper {
-
+/*
     private PlanMapper() {
     }
 
@@ -46,4 +46,5 @@ public class PlanMapper {
                 .features(plan.getFeatures())
                 .build();
     }
+*/
 }

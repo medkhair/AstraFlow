@@ -192,7 +192,10 @@ import axios from 'axios';
                     ...getAuthHeaders(),
                     'Content-Type': 'multipart/form-data',
                 },
-            }).then(response => response.data);
+            }).then((response) => {
+                    console.log('M3U import response:', response.data);
+                    response.data
+                });
         };
 
     

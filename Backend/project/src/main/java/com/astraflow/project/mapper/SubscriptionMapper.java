@@ -7,7 +7,7 @@ import com.astraflow.project.model.Plan;
 import com.astraflow.project.model.Subscription;
 
 public class SubscriptionMapper {
-
+/*
     private SubscriptionMapper() {
     }
 
@@ -21,6 +21,7 @@ public class SubscriptionMapper {
         subscription.setEndDate(request.getEndDate());
         subscription.setTrialEndDate(request.getTrialEndDate());
 
+       
         if (request.getClientId() != null) {
             Client client = new Client();
             client.setId(request.getClientId());
@@ -50,4 +51,5 @@ public class SubscriptionMapper {
                 .updatedAt(subscription.getUpdatedAt())
                 .build();
     }
+    */
 }

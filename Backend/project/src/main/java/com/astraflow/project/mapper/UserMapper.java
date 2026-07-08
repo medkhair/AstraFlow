@@ -14,7 +14,7 @@ import com.astraflow.project.model.Tenant;
 import com.astraflow.project.model.User;
 
 public class UserMapper {
-
+/*
     private UserMapper() {
     }
 
@@ -143,4 +143,5 @@ public class UserMapper {
                 .updatedAt(owner.getUpdatedAt())
                 .build();
     }
+*/
 }

@@ -6,7 +6,7 @@ import com.astraflow.project.model.Payment;
 import com.astraflow.project.model.Subscription;
 
 public class PaymentMapper {
-
+/*
     private PaymentMapper() {
     }
 
@@ -45,4 +45,5 @@ public class PaymentMapper {
                 .paidAt(payment.getPaidAt())
                 .build();
     }
+*/
 }

@@ -6,7 +6,7 @@ import com.astraflow.project.model.ChannelCategory;
 import com.astraflow.project.model.Tenant;
 
 public class ChannelCategoryMapper {
-
+/*
     private ChannelCategoryMapper() {
     }
 
@@ -38,4 +38,6 @@ public class ChannelCategoryMapper {
                 .sortOrder(category.getSortOrder())
                 .build();
     }
+    
+  */
 }
