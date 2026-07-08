@@ -28,7 +28,7 @@ public class ChannelCategory {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer sortOrder;
 
     protected ChannelCategory() {}
