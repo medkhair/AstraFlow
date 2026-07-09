@@ -1,6 +1,7 @@
 package com.astraflow.project.controller;
 
 
+import com.astraflow.project.dto.response.ClientResponse;
 import com.astraflow.project.model.Client;
 import com.astraflow.project.service.ClientService;
 
@@ -22,8 +23,8 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping
-    public ResponseEntity<List<Client>> findAll() {
-        return ResponseEntity.ok(clientService.findAll());
+    public ResponseEntity<List<ClientResponse>> findAll() {
+        return ResponseEntity.ok(clientService.findAllResponses());
     }
 
     @GetMapping("/{id}")
@@ -34,8 +35,8 @@ public class ClientController {
     }
 
     @GetMapping("/tenant/{tenantId}")
-    public ResponseEntity<List<Client>> findByTenantId(@PathVariable UUID tenantId) {
-        return ResponseEntity.ok(clientService.findByTenantId(tenantId));
+    public ResponseEntity<List<ClientResponse>> findByTenantId(@PathVariable UUID tenantId) {
+        return ResponseEntity.ok(clientService.findByTenantIdResponses(tenantId));
     }
 
     @PutMapping("/{id}")

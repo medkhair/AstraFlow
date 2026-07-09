@@ -18,7 +18,7 @@ import axios from 'axios';
         (error) => {
             if (error.response?.status === 401) {
                 localStorage.removeItem('authToken');
-                window.location.replace('/signin');
+                //window.location.replace('/signin');
                 return new Promise(() => {}); // halt — never resolves so no error propagates
             }
             return Promise.reject(error);
@@ -248,3 +248,22 @@ import axios from 'axios';
         export const getTenantInfo = () => fetchData(`/api/v1/tenants/${tenantId}`);
 
         export const updateTenantInfo = (tenantData) => updateData(`/api/v1/tenants/${tenantId}`, tenantData);
+
+    /* Clients */
+        
+        export const getClientsByTenantId = (tenantIdValue) =>
+            fetchData(`/api/v1/clients/tenant/${tenantIdValue ?? tenantId}`);
+
+        export const createClient = (clientData) => createData('/api/v1/clients', clientData);
+
+        export const updateClient = (clientId, clientData) =>
+            updateData(`/api/v1/clients/${clientId}`, clientData);
+
+        export const deleteClient = (clientId) =>
+            deleteData(`/api/v1/clients/${clientId}`);
+
+        export const getClientSubscription = (clientId) =>
+            fetchData(`/api/v1/subscriptions/client/${clientId}`);
+
+        export const getClientSubscriptionPlan = (planId) =>
+            fetchData(`/api/v1/plans/${planId}`);

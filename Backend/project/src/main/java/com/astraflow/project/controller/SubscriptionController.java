@@ -1,5 +1,6 @@
 package com.astraflow.project.controller;
 
+import com.astraflow.project.dto.response.SubscriptionResponse;
 import com.astraflow.project.model.Subscription;
 import com.astraflow.project.model.enums.SubscriptionStatus;
 import com.astraflow.project.service.SubscriptionService;
@@ -32,8 +33,8 @@ public class SubscriptionController {
     }
 
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<Subscription>> findByClientId(@PathVariable UUID clientId) {
-        return ResponseEntity.ok(subscriptionService.findByClientId(clientId));
+    public ResponseEntity<SubscriptionResponse> findByClientId(@PathVariable UUID clientId) {
+        return ResponseEntity.ok(subscriptionService.findResponseByClientId(clientId));
     }
 
     @GetMapping("/client/{clientId}/active")

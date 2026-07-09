@@ -1,5 +1,7 @@
 package com.astraflow.project.service;
 
+import com.astraflow.project.dto.request.ClientRequest;
+import com.astraflow.project.dto.response.ClientResponse;
 import com.astraflow.project.model.Client;
 
 import java.util.List;
@@ -24,8 +26,18 @@ public interface ClientService {
 
     void deleteById(UUID id);
 
-	String verify(Client user);
+    String verify(Client user);
 
-	@Nullable
-	Object isEmailVerified(UUID clientId);
+    @Nullable
+    Object isEmailVerified(UUID clientId);
+
+    ClientResponse create(ClientRequest request);
+
+    ClientResponse update(UUID id, ClientRequest request);
+
+    Optional<ClientResponse> findResponseById(UUID id);
+
+    List<ClientResponse> findAllResponses();
+
+    List<ClientResponse> findByTenantIdResponses(UUID tenantId);
 }

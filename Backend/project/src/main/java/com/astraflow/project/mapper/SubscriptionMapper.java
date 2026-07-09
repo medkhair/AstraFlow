@@ -7,42 +7,16 @@ import com.astraflow.project.model.Plan;
 import com.astraflow.project.model.Subscription;
 
 public class SubscriptionMapper {
-/*
-    private SubscriptionMapper() {
-    }
-
-    public static Subscription toSubscription(SubscriptionRequest request) {
-        if (request == null) {
-            return null;
-        }
-        Subscription subscription = new Subscription();
-        subscription.setStatus(request.getStatus());
-        subscription.setStartDate(request.getStartDate());
-        subscription.setEndDate(request.getEndDate());
-        subscription.setTrialEndDate(request.getTrialEndDate());
-
-       
-        if (request.getClientId() != null) {
-            Client client = new Client();
-            client.setId(request.getClientId());
-            subscription.setClient(client);
-        }
-        if (request.getPlanId() != null) {
-            Plan plan = new Plan();
-            plan.setId(request.getPlanId());
-            subscription.setPlan(plan);
-        }
-        return subscription;
-    }
-
-    public static SubscriptionResponse toSubscriptionResponse(Subscription subscription) {
+    
+    public static SubscriptionResponse toResponse(Subscription subscription) {
         if (subscription == null) {
             return null;
         }
+
         return SubscriptionResponse.builder()
                 .id(subscription.getId())
-                .clientId(subscription.getClient() != null ? subscription.getClient().getId() : null)
-                .planId(subscription.getPlan() != null ? subscription.getPlan().getId() : null)
+                .clientId(subscription.getClient().getId())
+                .planId(subscription.getPlan().getId())
                 .status(subscription.getStatus())
                 .startDate(subscription.getStartDate())
                 .endDate(subscription.getEndDate())
@@ -51,5 +25,19 @@ public class SubscriptionMapper {
                 .updatedAt(subscription.getUpdatedAt())
                 .build();
     }
-    */
+
+    public static Subscription toEntity(SubscriptionRequest request, Client client, Plan plan) {
+        if (request == null) {
+            return null;
+        }
+
+        Subscription subscription = new Subscription();
+        subscription.setClient(client);
+        subscription.setPlan(plan);
+        subscription.setStatus(request.getStatus());
+        subscription.setStartDate(request.getStartDate());
+        subscription.setEndDate(request.getEndDate());
+        subscription.setTrialEndDate(request.getTrialEndDate());
+        return subscription;
+    }
 }

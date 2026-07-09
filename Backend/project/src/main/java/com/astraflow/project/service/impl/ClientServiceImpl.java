@@ -1,6 +1,8 @@
 package com.astraflow.project.service.impl;
 
-
+import com.astraflow.project.dto.request.ClientRequest;
+import com.astraflow.project.dto.response.ClientResponse;
+import com.astraflow.project.mapper.ClientMapper;
 import com.astraflow.project.model.Client;
 import com.astraflow.project.model.Tenant;
 import com.astraflow.project.model.VerificationCode;
@@ -33,22 +35,24 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
-    
+
     @Autowired
     private TenantRepository tenantRepository;
-    
+
     @Autowired
     private EmailService emailService;
-    
+
     @Autowired
     private VerificationCodeService verificationCodeService;
-    
+
     @Autowired
     private AuthenticationManager authManager;
-    
-    
+
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private ClientMapper clientMapper;
 
     @Override
     public List<Client> findAll() {
@@ -75,24 +79,25 @@ public class ClientServiceImpl implements ClientService {
     public Client save(Client client) {
         if (client.getTenant() != null && client.getTenant().getId() != null) {
             Tenant managedTenant = tenantRepository.findById(client.getTenant().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Tenant not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("Tenant not found"));
             client.setTenant(managedTenant);
         }
 
-        if(clientRepository.existsByEmailAndTenantId(client.getEmail(), client.getTenant().getId())) {
-            throw new IllegalArgumentException("Email already exists for this tenant");
+        if (client.getTenant() != null && client.getTenant().getId() != null) {
+            if (clientRepository.existsByEmailAndTenantId(client.getEmail(), client.getTenant().getId())) {
+                throw new IllegalArgumentException("Email already exists for this tenant");
+            }
+            if (clientRepository.existsByUsernameAndTenantId(client.getUsername(), client.getTenant().getId())) {
+                throw new IllegalArgumentException("Username already exists for this tenant");
+            }
         }
-        if(clientRepository.existsByUsernameAndTenantId(client.getUsername(), client.getTenant().getId())) {
-            throw new IllegalArgumentException("Username already exists for this tenant");
-        }
-        
-        BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
         client.setPassword(encoder.encode(client.getPassword()));
-        
-        client.setStatus(UserStatus.INACTIVE);  
+
+        client.setStatus(UserStatus.INACTIVE);
         client.setEmailVerified(false);
-        
-        
+
         Client savedClient = clientRepository.save(client);
         VerificationCode verificationCode = verificationCodeService.createVerificationCode(savedClient);
         emailService.sendVerificationEmail(savedClient.getEmail(), verificationCode.getCode());
@@ -102,10 +107,26 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public Client update(UUID id, Client client) {
-        clientRepository.findById(id)
+        Client existing = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
-        client.setId(id);
-        return clientRepository.save(client);
+
+        existing.setEmail(client.getEmail());
+        existing.setFullName(client.getFullName());
+        existing.setPhone(client.getPhone());
+        existing.setUsername(client.getUsername());
+
+        if (client.getTenant() != null && client.getTenant().getId() != null) {
+            Tenant managedTenant = tenantRepository.findById(client.getTenant().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Tenant not found"));
+            existing.setTenant(managedTenant);
+        }
+
+        if (client.getPassword() != null && !client.getPassword().isBlank()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+            existing.setPassword(encoder.encode(client.getPassword()));
+        }
+
+        return clientRepository.save(existing);
     }
 
     @Override
@@ -114,34 +135,80 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.deleteById(id);
     }
 
-	@Override
-	public String verify(Client user) {
-		Authentication authentication = authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+    @Override
+    public String verify(Client user) {
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
         );
         if (authentication.isAuthenticated()) {
             Client client = clientRepository.findByUsername(user.getUsername())
-                    .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("Client not found"));
             return jwtService.generateToken(client.getUsername(), client.getId());
         } else {
             return "fail";
         }
-	}
-	
-	public boolean verifyEmail(String email, UUID tenantId) {
-		
-		return clientRepository.existsByEmailAndTenantId(email, tenantId);
-	}
-	
-	public boolean verifyUsername(String username, UUID tenantId) {
-		
-		return clientRepository.existsByUsernameAndTenantId(username, tenantId);
-	}
+    }
 
-	@Override
-	public @Nullable Object isEmailVerified(UUID clientId) {
+    public boolean verifyEmail(String email, UUID tenantId) {
+        return clientRepository.existsByEmailAndTenantId(email, tenantId);
+    }
+
+    public boolean verifyUsername(String username, UUID tenantId) {
+        return clientRepository.existsByUsernameAndTenantId(username, tenantId);
+    }
+
+    @Override
+    public @Nullable Object isEmailVerified(UUID clientId) {
         return clientRepository.findById(clientId)
                 .map(Client::isEmailVerified)
                 .orElse(null);
-	}
+    }
+
+    @Override
+    @Transactional
+    public ClientResponse create(ClientRequest request) {
+        Client client = clientMapper.toEntity(request);
+        Client saved = save(client);
+        return clientMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional
+    public ClientResponse update(UUID id, ClientRequest request) {
+        Client existing = clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
+
+        clientMapper.updateEntityFromRequest(existing, request);
+
+        if (existing.getTenant() != null && existing.getTenant().getId() != null) {
+            Tenant managedTenant = tenantRepository.findById(existing.getTenant().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Tenant not found"));
+            existing.setTenant(managedTenant);
+        }
+
+        Client saved = clientRepository.save(existing);
+        return clientMapper.toResponse(saved);
+    }
+
+    @Override
+    public Optional<ClientResponse> findResponseById(UUID id) {
+        return clientRepository.findById(id)
+                .map(clientMapper::toResponse);
+    }
+
+    @Override
+    public List<ClientResponse> findAllResponses() {
+        return clientRepository.findAll()
+                .stream()
+                .map(clientMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<ClientResponse> findByTenantIdResponses(UUID tenantId) {
+        return clientRepository.findByTenantId(tenantId)
+                .stream()
+                .map(clientMapper::toResponse)
+                .toList();
+    }
 }

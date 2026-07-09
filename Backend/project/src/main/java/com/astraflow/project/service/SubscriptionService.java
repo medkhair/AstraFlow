@@ -1,5 +1,6 @@
 package com.astraflow.project.service;
 
+import com.astraflow.project.dto.response.SubscriptionResponse;
 import com.astraflow.project.model.Subscription;
 import com.astraflow.project.model.enums.SubscriptionStatus;
 
@@ -13,7 +14,7 @@ public interface SubscriptionService {
 
     Optional<Subscription> findById(UUID id);
 
-    List<Subscription> findByClientId(UUID clientId);
+    Subscription findByClientId(UUID clientId);
 
     Optional<Subscription> findActiveByClientId(UUID clientId);
 
@@ -35,5 +36,16 @@ public interface SubscriptionService {
 
     boolean isSubscriptionPaid(UUID clientId);
     
+    SubscriptionResponse create(Subscription subscription);
+
+    SubscriptionResponse updatee(UUID id, Subscription subscription);
+
+    Optional<SubscriptionResponse> findResponseById(UUID id);
+
+    List<SubscriptionResponse> findAllResponses();
+
+    List<SubscriptionResponse> findByStatusResponses(SubscriptionStatus status);
+
+    SubscriptionResponse findResponseByClientId(UUID clientId);
     
 }

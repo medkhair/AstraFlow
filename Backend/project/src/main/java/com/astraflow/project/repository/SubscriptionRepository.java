@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, UUID> {
 
-    List<Subscription> findByClientId(UUID clientId);
+    Subscription findByClientId(UUID clientId);
 
     Optional<Subscription> findByClientIdAndStatus(UUID clientId, SubscriptionStatus status);
 
