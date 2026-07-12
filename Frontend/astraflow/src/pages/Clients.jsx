@@ -56,13 +56,14 @@ export default function ClientsPage() {
           <h1 className="text-balance text-2xl font-semibold text-foreground">Clients</h1>
           <p className="text-muted-foreground">All registered clients under your tenant.</p>
         </div>
-
+{/* 
         <button
           onClick={openAdd}
           className="rounded-xl bg-brand text-white text-sm px-4 py-2 hover:opacity-90 transition-opacity"
         >
           + Add Client
         </button>
+*/}
       </div>
 
       <div className="mt-6 space-y-4">
@@ -100,7 +101,7 @@ export default function ClientsPage() {
                       >
                         {client.status}
                       </span>
-
+{/* 
                       <button
                         onClick={(e) => openEdit(e, client)}
                         aria-label="Edit client"
@@ -119,6 +120,7 @@ export default function ClientsPage() {
                       >
                         <Trash2 className="size-3.5 text-red-500" />
                       </button>
+*/}
                     </div>
                   </div>
 

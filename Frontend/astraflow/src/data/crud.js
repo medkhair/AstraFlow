@@ -18,7 +18,7 @@ import axios from 'axios';
         (error) => {
             if (error.response?.status === 401) {
                 localStorage.removeItem('authToken');
-                //window.location.replace('/signin');
+                window.location.replace('/signin');
                 return new Promise(() => {}); // halt — never resolves so no error propagates
             }
             return Promise.reject(error);
