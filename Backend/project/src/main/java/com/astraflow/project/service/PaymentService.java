@@ -2,6 +2,7 @@ package com.astraflow.project.service;
 
 import com.astraflow.project.model.Payment;
 import com.astraflow.project.model.enums.PaymentStatus;
+import com.astraflow.project.dto.response.PaymentResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +25,6 @@ public interface PaymentService {
     Payment update(UUID id, Payment payment);
 
     void deleteById(UUID id);
+
+    List<PaymentResponse> findByTenantId(UUID tenantId);
 }

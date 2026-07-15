@@ -1,15 +1,29 @@
-import { payments, users, subscriptions, plans } from "@/data/data"
+import { usePayments } from "@/hooks/usePayments";
+import Loading from "@/utils/Loading";
 
 const methodBadge = {
   CREDIT_CARD: "bg-blue-500/10 text-blue-600",
   PAYPAL: "bg-yellow-500/10 text-yellow-700",
   BANK_TRANSFER: "bg-purple-500/10 text-purple-600",
-}
+  STRIPE: "bg-emerald-500/10 text-emerald-600",
+};
 
 export default function PaymentsPage() {
+  const { payments, loading, error } = usePayments();
+
   const totalRevenue = payments
     .filter((p) => p.status === "COMPLETED")
-    .reduce((sum, p) => sum + p.amount, 0)
+    .reduce((sum, p) => sum + Number(p.amount ?? 0), 0);
+
+  if (loading) return <Loading />;
+  if (error) {
+    return (
+      <section className="rounded-2xl bg-card p-6 md:p-8 shadow-sm ring-1 ring-border">
+        <h1 className="text-2xl font-semibold text-foreground">Payments</h1>
+        <p className="mt-2 text-red-500">Unable to load payments right now.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-2xl bg-card p-6 md:p-8 shadow-sm ring-1 ring-border">
@@ -46,43 +60,45 @@ export default function PaymentsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {payments.map((payment) => {
-              const sub = subscriptions.find((s) => s.id === payment.subscription_id)
-              const client = users.find((u) => u.id === sub?.client_id)
-              return (
-                <tr key={payment.id} className="hover:bg-background transition-colors">
-                  <td className="py-3 pr-4 font-medium text-foreground">{client?.full_name ?? "—"}</td>
-                  <td className="py-3 pr-4 font-semibold text-brand">${payment.amount.toFixed(2)}</td>
-                  <td className="py-3 pr-4">
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        methodBadge[payment.method] ?? "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {payment.method.replace("_", " ")}
-                    </span>
-                  </td>
-                  <td className="py-3 pr-4 font-mono text-xs text-muted-foreground">{payment.transaction_id}</td>
-                  <td className="py-3 pr-4 text-muted-foreground">
-                    {new Date(payment.paid_at).toLocaleDateString()}
-                  </td>
-                  <td className="py-3">
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        payment.status === "COMPLETED"
-                          ? "bg-green-500/10 text-green-600"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {payment.status}
-                    </span>
-                  </td>
-                </tr>
-              )
-            })}
+            {payments.map((payment) => (
+              <tr key={payment.id} className="hover:bg-background transition-colors">
+                <td className="py-3 pr-4 font-medium text-foreground">
+                  {payment.client_name ?? "—"}
+                </td>
+                <td className="py-3 pr-4 font-semibold text-brand">
+                  ${Number(payment.amount ?? 0).toFixed(2)}
+                </td>
+                <td className="py-3 pr-4">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      methodBadge[payment.method] ?? "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {payment.method?.replace("_", " ") ?? "Unknown"}
+                  </span>
+                </td>
+                <td className="py-3 pr-4 font-mono text-xs text-muted-foreground">
+                  {payment.transaction_id ?? "—"}
+                </td>
+                <td className="py-3 pr-4 text-muted-foreground">
+                  {payment.paid_at ? new Date(payment.paid_at).toLocaleDateString() : "—"}
+                </td>
+                <td className="py-3">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      payment.status === "COMPLETED"
+                        ? "bg-green-500/10 text-green-600"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {payment.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     </section>
-  )
+  );
 }

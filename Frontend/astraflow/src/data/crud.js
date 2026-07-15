@@ -267,3 +267,8 @@ import axios from 'axios';
 
         export const getClientSubscriptionPlan = (planId) =>
             fetchData(`/api/v1/plans/${planId}`);
+
+    /* Payments */
+
+        export const getPaymentsByTenantId = (tenantIdValue) =>
+            fetchData(`/api/v1/payments/tenant/${tenantIdValue ?? tenantId}`);

@@ -1,5 +1,6 @@
 package com.astraflow.project.controller;
 
+import com.astraflow.project.dto.response.PaymentResponse;
 import com.astraflow.project.model.Payment;
 import com.astraflow.project.model.enums.PaymentStatus;
 import com.astraflow.project.service.PaymentService;
@@ -62,5 +63,10 @@ public class PaymentController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         paymentService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/tenant/{tenantId}")
+    public ResponseEntity<List<PaymentResponse>> findByTenantId(@PathVariable UUID tenantId) {
+        return ResponseEntity.ok(paymentService.findByTenantId(tenantId));
     }
 }

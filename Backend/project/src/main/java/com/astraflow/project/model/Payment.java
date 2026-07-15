@@ -53,6 +53,10 @@ public class Payment {
 
     private LocalDateTime paidAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tenant_id")
+    private Tenant tenant;
+
 	public UUID getId() {
 		return id;
 	}
@@ -116,6 +120,14 @@ public class Payment {
 	public void setPaidAt(LocalDateTime paidAt) {
 		this.paidAt = paidAt;
 	}
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
 
     public static Builder builder() {
         return new Builder();
