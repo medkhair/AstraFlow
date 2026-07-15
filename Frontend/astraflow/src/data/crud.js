@@ -213,7 +213,7 @@ import axios from 'axios';
 
     /* Subscriptions */
 
-        export const getSubscriptions = () => fetchData('/api/v1/subscriptions');
+        export const getSubscriptions = (tenantID) => fetchData(`/api/v1/subscriptions/tenant/${tenantID ?? tenantId}`);
 
         export const createSubscription = (subscriptionData) => createData('/api/v1/subscriptions', subscriptionData);
 
