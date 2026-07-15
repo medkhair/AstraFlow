@@ -72,6 +72,10 @@ public class Subscription {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tenant_id", nullable = false)
+	private Tenant tenant;
+
 	public UUID getId() {
 		return id;
 	}
@@ -142,6 +146,14 @@ public class Subscription {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
 	}
     
     

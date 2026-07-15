@@ -47,5 +47,7 @@ public interface SubscriptionService {
     List<SubscriptionResponse> findByStatusResponses(SubscriptionStatus status);
 
     SubscriptionResponse findResponseByClientId(UUID clientId);
+
+    List<SubscriptionResponse> findByTenantIdResponses(UUID tenantId);
     
 }

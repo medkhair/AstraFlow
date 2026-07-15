@@ -158,5 +158,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return SubscriptionMapper.toResponse(subscription);
     }
 
+    @Override
+    public List<SubscriptionResponse> findByTenantIdResponses(UUID tenantId) {
+        return subscriptionRepository.findByTenantId(tenantId)
+                .stream()
+                .map(SubscriptionMapper::toResponse)
+                .toList();
+    }
+
 
 }

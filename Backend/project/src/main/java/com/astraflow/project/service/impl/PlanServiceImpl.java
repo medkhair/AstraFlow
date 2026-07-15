@@ -21,6 +21,9 @@ public class PlanServiceImpl implements PlanService {
     @Autowired
     private PlanRepository planRepository;
 
+    @Autowired
+    private SubscriptionServiceImpl subscriptionService;
+
     @Override
     public List<Plan> findAll() {
         return planRepository.findAll();
@@ -77,6 +80,18 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void deleteById(UUID id) {
+        Plan plan = findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Plan not found"));
+
+        boolean hasSubscriptions = subscriptionService
+                .findByTenantIdResponses(plan.getTenant().getId())
+                .stream()
+                .anyMatch(subscription -> subscription.getPlanId().equals(id));
+
+        if (hasSubscriptions) {
+            throw new IllegalStateException("Cannot delete plan with active subscriptions.");
+        }
+
         planRepository.deleteById(id);
     }
 }

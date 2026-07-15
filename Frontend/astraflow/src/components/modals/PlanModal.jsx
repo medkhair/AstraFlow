@@ -6,7 +6,6 @@ const PLAN_TYPES = ["MONTHLY", "WEEKLY", "YEARLY", "LIFETIME", "CUSTOM"]
 const defaultForm = {
   name: "",
   price: "",
-  duration_days: "",
   plan_type: "MONTHLY",
   max_connections: "1",
   is_active: true,
@@ -29,7 +28,6 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
           ? {
               name: initial.name,
               price: initial.price ?? "",
-              duration_days: initial.duration_days ?? "",
               plan_type: initial.plan_type ?? "IPTV",
               max_connections: initial.max_connections ?? "1",
               is_active: initial.is_active ?? true,
@@ -48,8 +46,6 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
     if (!form.name.trim()) e.name = "Name is required."
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) < 0)
       e.price = "Price must be a non-negative number."
-    if (!form.duration_days || isNaN(Number(form.duration_days)) || Number(form.duration_days) < 1)
-      e.duration_days = "Duration must be at least 1 day."
     if (!form.max_connections || isNaN(Number(form.max_connections)) || Number(form.max_connections) < 1)
       e.max_connections = "Must be at least 1."
     return e
@@ -68,7 +64,6 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
     onSubmit?.({
       name: form.name.trim(),
       price: Number(form.price),
-      duration_days: Number(form.duration_days),
       plan_type: form.plan_type,
       max_connections: Number(form.max_connections),
       is_active: form.is_active,
@@ -142,24 +137,6 @@ export function PlanModal({ open, onClose, onSubmit, initial }) {
                   }`}
                 />
                 {errors.price && <p className="text-xs text-red-500">{errors.price}</p>}
-              </div>
-              <div className="grid gap-1.5">
-                <label htmlFor="plan-duration" className="text-sm font-medium text-foreground">
-                  Duration (days) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="plan-duration"
-                  name="duration_days"
-                  type="number"
-                  min={1}
-                  value={form.duration_days}
-                  onChange={handleChange}
-                  placeholder="30"
-                  className={`h-10 rounded-lg bg-background px-3 text-sm ring-1 outline-none transition-colors focus:ring-brand ${
-                    errors.duration_days ? "ring-red-500" : "ring-border"
-                  }`}
-                />
-                {errors.duration_days && <p className="text-xs text-red-500">{errors.duration_days}</p>}
               </div>
             </div>
 

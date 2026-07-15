@@ -24,4 +24,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, UUID
     List<Subscription> findByStatus(SubscriptionStatus status);
 
     boolean existsByClientIdAndStatus(UUID clientId, SubscriptionStatus status);
+
+    List<Subscription> findByTenantId(UUID tenantId);
 }

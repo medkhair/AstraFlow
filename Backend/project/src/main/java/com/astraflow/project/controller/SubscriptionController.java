@@ -60,11 +60,10 @@ public class SubscriptionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         subscriptionService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/client/{clientId}/subscribed")
     public ResponseEntity<Boolean> isClientSubscribed(@PathVariable UUID clientId) {
