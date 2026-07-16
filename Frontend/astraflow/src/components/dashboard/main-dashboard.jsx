@@ -5,12 +5,22 @@ import { UsersWidget } from "@/components/dashboard/users"
 import { ConsumptionChart } from "@/components/dashboard/consumption-chart"
 import { Shortcuts } from "@/components/dashboard/shortcuts"
 import EnergyWidget from "@/components/dashboard/energy-widget"
-import { channels, clients, subscriptions, support_tickets, payments } from "@/data/data"
+import { useChannels } from "@/hooks/useChannels"
+import { useClients } from "@/hooks/useClients"
+import { useSubscriptions } from "@/hooks/useSubscriptions"
+import { useSupportTickets } from "@/hooks/useSupportTickets"
+import { usePayments } from "@/hooks/usePayments"
 
 export function MainDashboard() {
+  const { channels } = useChannels()
+  const { clients } = useClients()
+  const { subscriptions } = useSubscriptions()
+  const { tickets: supportTickets } = useSupportTickets()
+  const { payments } = usePayments()
+
   const totalRevenue = payments
     .filter((p) => p.status === "COMPLETED")
-    .reduce((sum, p) => sum + p.amount, 0)
+    .reduce((sum, p) => sum + Number(p.amount ?? 0), 0)
 
   return (
     <div className="space-y-5">
@@ -38,7 +48,7 @@ export function MainDashboard() {
         />
         <DeviceCard
           title="Open Tickets"
-          value={support_tickets.filter((t) => t.status === "OPEN").length}
+          value={supportTickets.filter((t) => t.status === "OPEN").length}
           subtitle="Pending support"
           icon="support"
           trend={`$${totalRevenue.toFixed(2)} revenue`}

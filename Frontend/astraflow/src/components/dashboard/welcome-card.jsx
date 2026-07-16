@@ -1,10 +1,20 @@
-import { users, tenants, channels, clients, subscriptions, support_tickets } from "@/data/data"
+import { useChannels } from "@/hooks/useChannels"
+import { useClients } from "@/hooks/useClients"
+import { useSubscriptions } from "@/hooks/useSubscriptions"
+import { useSupportTickets } from "@/hooks/useSupportTickets"
+import { useTenant } from "@/hooks/useTenant"
 
 export function WelcomeCard() {
-  const adminUser = users.find((u) => u.user_type === "ADMIN")
-  const tenant = tenants[0]
+  const { tenant } = useTenant()
+  const { channels } = useChannels()
+  const { clients } = useClients()
+  const { subscriptions } = useSubscriptions()
+  const { tickets: supportTickets } = useSupportTickets()
+
   const activeSubscriptions = subscriptions.filter((s) => s.status === "ACTIVE").length
-  const openTickets = support_tickets.filter((t) => t.status === "OPEN").length
+  const openTickets = supportTickets.filter((t) => t.status === "OPEN").length
+
+  const admin = localStorage.getItem("tokenSubject");
 
   return (
     <section className="relative overflow-hidden rounded-3xl bg-sidebar-gradient p-6 text-white">
@@ -12,10 +22,12 @@ export function WelcomeCard() {
         {/* Left Side */}
         <div className="max-w-xl md:w-3/5">
           <h1 className="text-balance text-3xl font-semibold">
-            Welcome back, {adminUser?.full_name.split(" ")[0]}
+            Welcome back, {admin ? 
+            admin.charAt(0).toUpperCase() + admin.slice(1)
+            : "Admin"}
           </h1>
           <p className="mt-2 text-sm leading-6 text-white/90">
-            Managing <strong>{tenant?.name}</strong> &mdash; {tenant?.subdomain}.com
+            Managing <strong>{tenant?.name}</strong> &mdash; {tenant?.subdomain ? `${tenant.subdomain}.com` : "your tenant"}
           </p>
           <div className="mt-4 flex items-center gap-4 rounded-2xl bg-white/10 px-4 py-3 text-sm">
             <span className="text-2xl">📡</span>
