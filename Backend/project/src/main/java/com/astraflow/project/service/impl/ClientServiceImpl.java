@@ -19,8 +19,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,18 +139,44 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public String verify(Client user) {
-        Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            Client client = clientRepository.findByUsername(user.getUsername())
-                    .orElseThrow(() -> new EntityNotFoundException("Client not found"));
-            return jwtService.generateToken(client.getUsername(), client.getId());
-        } else {
-            return "fail";
+        if (user == null) {
+            throw new IllegalArgumentException("Login request body is required");
         }
-    }
 
+        String identifier = Optional.ofNullable(user.getUsername())
+                .filter(value -> !value.isBlank())
+                .orElseGet(() -> Optional.ofNullable(user.getEmail())
+                        .filter(value -> !value.isBlank())
+                        .orElseThrow(() -> new IllegalArgumentException("Username or email is required")));
+
+        String password = Optional.ofNullable(user.getPassword())
+                .filter(value -> !value.isBlank())
+                .orElseThrow(() -> new IllegalArgumentException("Password is required"));
+
+        System.out.println("Client login attempt received for identifier={}"+ identifier);
+
+        Client client = clientRepository.findByUsername(identifier)
+                .or(() -> clientRepository.findByEmail(identifier))
+                .orElseThrow();
+
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(client.getUsername(), password)
+            );
+
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(client.getUsername(), client.getId());
+                System.out.println("Client login succeeded for clientId={}, username={}"+ client.getId()+ client.getUsername());
+                return token;
+            }
+        } catch (AuthenticationException ex) {
+        	System.out.println("Client login failed for clientId={} due to {}"+ client.getId()+ ex.getMessage()+ ex);
+            throw new BadCredentialsException("Invalid username/email or password", ex);
+        }
+
+        System.out.println("Client login failed for clientId={} because authentication was not completed"+ client.getId());
+        throw new BadCredentialsException("Invalid username/email or password");
+    }
     public boolean verifyEmail(String email, UUID tenantId) {
         return clientRepository.existsByEmailAndTenantId(email, tenantId);
     }

@@ -9,9 +9,12 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin
@@ -66,8 +69,20 @@ public class ClientController {
     }
     
     @PostMapping("/login")
-    public String login(@RequestBody Client user) {
-        return clientService.verify(user);
+    public ResponseEntity<?> login(@RequestBody Client client) {
+        try {
+            String loggedInClient = clientService.verify(client);
+            System.out.println("Client login successful");
+            return ResponseEntity.ok(loggedInClient);
+        } catch (IllegalArgumentException e) {
+        	System.out.println("Client login rejected: {}"+ e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+        	System.out.println("Client login failed: {}"+ e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/{clientId}/email-verified")
