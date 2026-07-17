@@ -235,6 +235,7 @@ public class StripePaymentService {
             subscription.setStatus(SubscriptionStatus.ACTIVE);
             subscription.setStartDate(LocalDate.now());
             subscription.setEndDate(LocalDate.now().plusDays(plan.getDurationDays()));
+            subscription.setTenant(client.getTenant());
             subscriptionService.save(subscription);
 
             paymentService.findByTransactionId(pi.getId()).ifPresent(payment -> {
@@ -371,6 +372,7 @@ public class StripePaymentService {
                 .transactionId(paymentIntent.getId())
                 .subscription(subscription)
                 .build();
+        payment.setTenant(client.getTenant());
         paymentService.save(payment);
     }
 
