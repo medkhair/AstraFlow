@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuthentication";
+import { loginErros } from "../data/errors";
 
 export function Login() {
   const [username, setUsername] = useState("");
@@ -24,10 +25,22 @@ export function Login() {
     try {
       await login(username, password);
       navigate("/", { replace: true });
-    } catch {
-      setError("Invalid credentials. Please try again.");
+    } catch (error) {
+      if (error) {
+        console.log("Login error:", error.response.data);
+        setLoginError(error.response.data);
+      }
     } finally {
       setLoading(false);
+    }
+  }
+
+  function setLoginError(response) {
+    const errorObj = loginErros.find((err) => err.id === response.error);
+    if (errorObj) {
+      setError(errorObj.message);
+    } else {
+      setError("An unknown error occurred. Please try again.");
     }
   }
 

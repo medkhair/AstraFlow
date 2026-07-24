@@ -13,7 +13,7 @@ import axios from 'axios';
         return token ? { Authorization: `Bearer ${token}` } : {};
     };
 
-
+/*
     api.interceptors.response.use(
         (response) => response,
         (error) => {
@@ -25,8 +25,8 @@ import axios from 'axios';
             }
             return Promise.reject(error);
         }
- );
-
+    );
+*/
     // login and token management
     export const login = async (username, password) => {
         try {
@@ -51,6 +51,8 @@ import axios from 'axios';
     export const logout = () => {
         // Remove token from storage
         localStorage.removeItem('authToken');
+        localStorage.removeItem('tokenSubject');
+        localStorage.removeItem('clientId');
         // Remove token from axios headers
         delete api.defaults.headers.common['Authorization'];
     };
