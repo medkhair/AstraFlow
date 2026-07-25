@@ -20,11 +20,11 @@
     export const signUpErros =
         [
             {
-                "id": "signup_email_exists",
+                "id": "Email already exists for this tenant",
                 "message": "Email already exists. Please use a different email."
             },
             {   
-                "id": "signup_username_exists",
+                "id": "Username already exists for this tenant",
                 "message": "Username already exists. Please choose a different username."
             }
         ]

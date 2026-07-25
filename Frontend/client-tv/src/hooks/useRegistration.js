@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { register } from '../data/crud';
+import { signUpErros } from '../data/errors';
 
 export function useRegistration() {
   const [loading, setLoading] = useState(false);
@@ -13,12 +14,19 @@ export function useRegistration() {
       return data;
     } catch (err) {
       const raw = err?.response?.data;
-      const msg =
-        (typeof raw === 'string' && raw) ||
-        raw?.message ||
-        (Array.isArray(raw?.errors) ? raw.errors.join(', ') : null) ||
-        'Registration failed. Please try again.';
-      setError(msg);
+      console.error('Registration error:', raw);
+      if (raw) {
+        const errorObj = signUpErros.find((err) => err.id === raw);
+        if (errorObj) {
+          setError(errorObj.message);
+          console.log('Error state set to:', error);
+        } else {
+          setError("An unknown error occurred. Please try again.");
+        }
+      } else {
+        setError("An unknown error occurred. Please try again.");
+      }
+      
       throw err;
     } finally {
       setLoading(false);
