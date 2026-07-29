@@ -5,7 +5,12 @@ export const hasVerifiedEmail = async () => {
   if (!clientId) return false;
   return await isEmailVerified(clientId);
 };
-export const hasSelectedPlan = () => !!localStorage.getItem('selected_plan');
+export const hasSelectedPlan = async () => {
+  const clientId = localStorage.getItem('clientId');
+  if (!clientId) return false;
+  const subscriptionStatus = await fetchSubscriptionStatus(clientId);
+  return subscriptionStatus;
+}
 
 export const hasCompletedCheckout = async () => {
   const clientId = localStorage.getItem('clientId');
