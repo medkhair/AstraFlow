@@ -1,5 +1,6 @@
 package com.astraflow.project.controller;
 
+import com.astraflow.project.dto.response.FavoriteResponse;
 import com.astraflow.project.model.Favorite;
 import com.astraflow.project.service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +49,18 @@ public class FavoriteController {
         favoriteService.deleteByClientIdAndChannelId(clientId, channelId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/client/{clientId}/all")
+    public ResponseEntity<List<FavoriteResponse>> findAllFavoritesByClientId(@PathVariable UUID clientId) {
+        List<FavoriteResponse> favoriteResponses = favoriteService.findAllFavoritesByClientId(clientId);
+        return ResponseEntity.ok(favoriteResponses);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<FavoriteResponse> createFavorite(@RequestBody Favorite favorite) {
+        FavoriteResponse favoriteResponse = favoriteService.create(favorite);
+        return ResponseEntity.status(HttpStatus.CREATED).body(favoriteResponse);
+    }
+
+
 }

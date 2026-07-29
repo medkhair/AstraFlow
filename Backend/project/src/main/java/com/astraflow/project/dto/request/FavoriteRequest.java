@@ -15,4 +15,21 @@ public class FavoriteRequest {
 
     private UUID clientId;
     private UUID channelId;
+    
+    
+	public UUID getClientId() {
+		return clientId;
+	}
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
+	}
+	public UUID getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(UUID channelId) {
+		this.channelId = channelId;
+	}
+    
+    
+    
 }

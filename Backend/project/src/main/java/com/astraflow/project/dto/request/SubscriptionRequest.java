@@ -21,6 +21,7 @@ public class SubscriptionRequest {
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalDate trialEndDate;
+	
 	public UUID getClientId() {
 		return clientId;
 	}

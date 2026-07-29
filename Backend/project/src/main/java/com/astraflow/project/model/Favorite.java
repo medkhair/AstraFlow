@@ -18,8 +18,6 @@ import java.util.UUID;
                 @UniqueConstraint(name = "uk_favorite_client_channel", columnNames = {"client_id", "channel_id"})
         }
 )
-@Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,4 +39,39 @@ public class Favorite {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public Channel getChannel() {
+		return channel;
+	}
+
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+    
+    
+    
 }

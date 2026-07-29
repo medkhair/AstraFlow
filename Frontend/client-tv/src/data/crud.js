@@ -295,6 +295,42 @@ import axios from 'axios';
                     throw error;
                 }
             };
+
+
+        /* Favorite Channels */
+
+            export const fetchFavoriteChannels = async (clientId) => {
+                try {
+                    const response = await api.get(`/api/v1/favorites/client/${clientId}/all`, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error fetching favorite channels:', error);
+                    throw error;
+                }
+            };
+
+            export const addFavoriteChannel = async (clientId, channelId) => {
+                try {
+                    const response = await api.post(`/api/v1/favorites/create`, { clientId, channelId }, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error adding favorite channel:', error);
+                    throw error;
+                }
+            };
+
+            export const removeFavoriteChannel = async (favoriteId) => {
+                try {
+                    const response = await api.delete(`/api/v1/favorites/${favoriteId}`, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error removing favorite channel:', error);
+                    throw error;
+                }
+            };
             
 
         
