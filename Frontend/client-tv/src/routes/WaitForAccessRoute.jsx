@@ -14,18 +14,24 @@ export function WaitForAccessRoute({ children }) {
     const checkAccess = async () => {
       const isVerified = await hasVerifiedEmail();
       setVerified(isVerified);
+      console.log("Email verification status:", isVerified);
 
-      if (isVerified) {
-        const completed = await hasCompletedCheckout();
-        setCheckoutCompleted(completed);
+      if (!isVerified) {
+        setCheckoutCompleted(false);
+        return;
       }
+
+      const completed = await hasCompletedCheckout();
+      setCheckoutCompleted(completed);
     };
 
     checkAccess();
+    
   }, []);
 
   // Loading
   if (verified === null || checkoutCompleted === null) {
+    console.log("Waiting for access checks to complete...");
     return null; // or a spinner
   }
 

@@ -13,7 +13,7 @@ import axios from 'axios';
         return token ? { Authorization: `Bearer ${token}` } : {};
     };
 
-/*
+
     api.interceptors.response.use(
         (response) => response,
         (error) => {
@@ -26,7 +26,7 @@ import axios from 'axios';
             return Promise.reject(error);
         }
     );
-*/
+
     // login and token management
     export const login = async (username, password) => {
         try {
@@ -268,7 +268,7 @@ import axios from 'axios';
             };
 
 
-    /* fetch subscription status */
+    /* fetch subscription */
 
         /* is subscribed */
             
@@ -283,6 +283,18 @@ import axios from 'axios';
                 }
             };
 
+        /* Subscription Plan */
+
+            export const fetchSubscriptionPlan = async (clientId) => {
+                try {
+                    const response = await api.get(`/api/v1/subscriptions/client/${clientId}/plan`, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error fetching subscription plan:', error);
+                    throw error;
+                }
+            };
             
 
         

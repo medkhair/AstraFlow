@@ -2,6 +2,7 @@ package com.astraflow.project.service.impl;
 
 import com.astraflow.project.dto.response.SubscriptionResponse;
 import com.astraflow.project.mapper.SubscriptionMapper;
+import com.astraflow.project.model.Plan;
 import com.astraflow.project.model.Subscription;
 import com.astraflow.project.model.enums.SubscriptionStatus;
 import com.astraflow.project.repository.SubscriptionRepository;
@@ -166,5 +167,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .toList();
     }
 
+	@Override
+	public Plan getSubscriptionPlan(UUID subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 }

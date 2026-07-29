@@ -7,11 +7,11 @@ import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { Home } from './pages/Home'
 import { PlayerPage } from './pages/Player'
-import { VerifyEmail } from './pages/VerifyEmail'
 import { ChoosePlan } from './pages/ChoosePlan'
 import { CheckOut } from './pages/CheckOut'
 import { defaultFavorites } from './data/data'
 import './App.css'
+import { VerifyEmail } from './pages/VerifyEmail'
 
 function MainContent() {
   const { user, logout } = useAuth()
@@ -63,7 +63,7 @@ function App() {
             path="/verify-email"
             element={
               <ProtectedRoute>
-                <VerifyEmail />
+                <VerifyEmail/>
               </ProtectedRoute>
             }
           />

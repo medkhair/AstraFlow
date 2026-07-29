@@ -1,6 +1,7 @@
 package com.astraflow.project.service;
 
 import com.astraflow.project.dto.response.SubscriptionResponse;
+import com.astraflow.project.model.Plan;
 import com.astraflow.project.model.Subscription;
 import com.astraflow.project.model.enums.SubscriptionStatus;
 
@@ -49,5 +50,8 @@ public interface SubscriptionService {
     SubscriptionResponse findResponseByClientId(UUID clientId);
 
     List<SubscriptionResponse> findByTenantIdResponses(UUID tenantId);
+    
+    Plan getSubscriptionPlan(UUID subscriptionId);
+    
     
 }
