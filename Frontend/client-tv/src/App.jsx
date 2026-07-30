@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuthentication'
 import { ProtectedRoute } from './routes/ProtectedRoute'
@@ -10,20 +9,14 @@ import { PlayerPage } from './pages/Player'
 import { ChoosePlan } from './pages/ChoosePlan'
 import { CheckOut } from './pages/CheckOut'
 import { defaultFavorites } from './data/data'
+import { useFavorite } from './hooks/useFavorite'
 import './App.css'
 import { VerifyEmail } from './pages/VerifyEmail'
 
 function MainContent() {
   const { user, logout } = useAuth()
-  const [favorites, setFavorites] = useState(defaultFavorites)
-
-  function toggleFavorite(channelId) {
-    setFavorites((prev) =>
-      prev.includes(channelId)
-        ? prev.filter((id) => id !== channelId)
-        : [...prev, channelId]
-    )
-  }
+  const { favorites, isLoading: favLoading, toggleFavorite } = useFavorite()
+  const favoritesList = favLoading ? defaultFavorites : favorites
 
   return (
     <Routes>
@@ -32,7 +25,7 @@ function MainContent() {
         element={
           <Home
             user={user}
-            favorites={favorites}
+            favorites={favoritesList}
             toggleFavorite={toggleFavorite}
             onLogout={logout}
           />
@@ -42,7 +35,7 @@ function MainContent() {
         path="/player/:channelId"
         element={
           <PlayerPage
-            favorites={favorites}
+            favorites={favoritesList}
             toggleFavorite={toggleFavorite}
           />
         }

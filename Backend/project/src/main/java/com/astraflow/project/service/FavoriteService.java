@@ -2,6 +2,7 @@ package com.astraflow.project.service;
 
 import com.astraflow.project.model.Favorite;
 import com.astraflow.project.dto.response.FavoriteResponse;
+import com.astraflow.project.dto.request.FavoriteRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public interface FavoriteService {
 
     List<FavoriteResponse> findAllFavoritesByClientId(UUID clientId);
 
-    FavoriteResponse create(Favorite favorite);
+    FavoriteResponse create(FavoriteRequest favorite);
 
-    
+
 }

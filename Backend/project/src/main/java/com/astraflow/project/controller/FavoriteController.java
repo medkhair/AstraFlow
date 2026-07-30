@@ -1,5 +1,6 @@
 package com.astraflow.project.controller;
 
+import com.astraflow.project.dto.request.FavoriteRequest;
 import com.astraflow.project.dto.response.FavoriteResponse;
 import com.astraflow.project.model.Favorite;
 import com.astraflow.project.service.FavoriteService;
@@ -57,7 +58,7 @@ public class FavoriteController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<FavoriteResponse> createFavorite(@RequestBody Favorite favorite) {
+    public ResponseEntity<FavoriteResponse> createFavorite(@RequestBody FavoriteRequest favorite) {
         FavoriteResponse favoriteResponse = favoriteService.create(favorite);
         return ResponseEntity.status(HttpStatus.CREATED).body(favoriteResponse);
     }

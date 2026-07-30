@@ -13,7 +13,7 @@ import axios from 'axios';
         return token ? { Authorization: `Bearer ${token}` } : {};
     };
 
-
+/*
     api.interceptors.response.use(
         (response) => response,
         (error) => {
@@ -26,6 +26,7 @@ import axios from 'axios';
             return Promise.reject(error);
         }
     );
+*/
 
     // login and token management
     export const login = async (username, password) => {
