@@ -3,17 +3,10 @@ import { useChannels } from "../hooks/useChannels";
 import { useChannelCategories } from "../hooks/useChannelCategories";
 import { ChannelCard } from "../components/ChannelCard";
 
-export function Home({ user, favorites, toggleFavorite }) {
+export function Home({ user, favorites, toggleFavorite, search, setSearch }) {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [search, setSearch] = useState("");
-  const [currentTime, setCurrentTime] = useState(new Date());
   const { channels, isLoading: channelsLoading } = useChannels();
   const { categories } = useChannelCategories();
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const visibleChannels = channels.filter((ch) => {
     if (activeCategory === "favorites") return favorites.includes(ch.id);
@@ -26,42 +19,8 @@ export function Home({ user, favorites, toggleFavorite }) {
     return matchesCategory && matchesSearch;
   });
 
-  const formatTime = (date) =>
-    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-  const formatDate = (date) =>
-    date.toLocaleDateString([], {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
-
   return (
     <div className="tv-app-body">
-      <div className="home-toolbar">
-        <div className="topbar-search home-search">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="search-icon">
-            <path
-              fillRule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <input
-            type="search"
-            placeholder="Search channels..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="search-input"
-          />
-        </div>
-
-        <div className="topbar-clock home-clock">
-          <span className="clock-time">{formatTime(currentTime)}</span>
-          <span className="clock-date">{formatDate(currentTime)}</span>
-        </div>
-      </div>
-
       {/* Category Tabs */}
       <nav className="category-nav">
         {categories.map((cat) => (

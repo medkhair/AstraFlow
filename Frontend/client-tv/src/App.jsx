@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet, Link, useLocation } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, Outlet, Link } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuthentication'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { WaitForAccessRoute } from './routes/WaitForAccessRoute'
@@ -14,8 +15,37 @@ import { useFavorite } from './hooks/useFavorite'
 import './App.css'
 import { VerifyEmail } from './pages/VerifyEmail'
 
-function AppOutlet() {
+function AppOutlet({ search, setSearch }) {
   const { user, logout } = useAuth()
+  const [currentTime, setCurrentTime] = useState(new Date())
+  const [menuOpen, setMenuOpen] = useState(false)
+  const triggerRef = useRef(null)
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (triggerRef.current && !triggerRef.current.contains(event.target)) {
+        setMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handlePointerDown)
+    return () => document.removeEventListener('mousedown', handlePointerDown)
+  }, [])
+
+  const formatTime = (date) =>
+    date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+  const formatDate = (date) =>
+    date.toLocaleDateString([], {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    })
 
   return (
     <div className="tv-app">
@@ -67,21 +97,59 @@ function AppOutlet() {
           <span className="brand-name">AstraFlow</span>
         </div>
 
-        <div className="topbar-right">
-          <Link className="support-outlet-btn" to="/support-tickets">
-            Support Ticket
-          </Link>
+        <div className="topbar-search">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="search-icon">
+            <path
+              fillRule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <input
+            type="search"
+            placeholder="Search channels..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
 
-          <div className="topbar-user">
-            <div className="user-avatar">{(user?.full_name ?? user?.username ?? '?')[0]}</div>
-            <div className="user-info">
-              <span className="user-name">{user?.full_name ?? user?.username}</span>
-              <span className="user-plan">{user?.subscription?.plan}</span>
+        <div className="topbar-right">
+          <div className="topbar-clock">
+            <span className="clock-time">{formatTime(currentTime)}</span>
+            <span className="clock-date">{formatDate(currentTime)}</span>
+          </div>
+
+          <div className={`topbar-user-trigger ${menuOpen ? 'open' : ''}`} ref={triggerRef}>
+            <button
+              type="button"
+              className="topbar-user"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-expanded={menuOpen}
+            >
+              <div className="user-avatar">{(user?.full_name ?? user?.username ?? '?')[0]}</div>
+              <div className="user-info">
+                <span className="user-name">{user?.full_name ?? user?.username}</span>
+                <span className="user-plan">{user?.subscription?.plan}</span>
+              </div>
+            </button>
+
+            <div className={`topbar-user-menu ${menuOpen ? 'visible' : ''}`}>
+              <Link to="/" onClick={() => setMenuOpen(false)}>Profile</Link>
+              <Link to="/support-tickets" onClick={() => setMenuOpen(false)}>Support Ticket</Link>
+              <Link to="/checkout" onClick={() => setMenuOpen(false)}>Subscription Payments</Link>
+              <Link to="/" onClick={() => setMenuOpen(false)}>Settings</Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false)
+                  logout()
+                }}
+              >
+                Logout
+              </button>
             </div>
           </div>
-          <button className="signout-btn" onClick={logout}>
-            Sign Out
-          </button>
         </div>
       </header>
 
@@ -92,12 +160,13 @@ function AppOutlet() {
 
 function MainContent() {
   const { user } = useAuth()
+  const [search, setSearch] = useState('')
   const { favorites, isLoading: favLoading, toggleFavorite } = useFavorite()
   const favoritesList = favLoading ? defaultFavorites : favorites
 
   return (
     <Routes>
-      <Route element={<AppOutlet />}>
+      <Route element={<AppOutlet search={search} setSearch={setSearch} />}>
         <Route
           path="/"
           element={
@@ -105,6 +174,8 @@ function MainContent() {
               user={user}
               favorites={favoritesList}
               toggleFavorite={toggleFavorite}
+              search={search}
+              setSearch={setSearch}
             />
           }
         />
