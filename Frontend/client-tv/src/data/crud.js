@@ -332,6 +332,33 @@ import axios from 'axios';
                     throw error;
                 }
             };
+
+    
+        /* Tickets */
+
+            export const fetchTickets = async (clientId) => {
+                try {
+                    const response = await api.get(`/api/v1/tickets/client/${clientId}/all`, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error fetching tickets:', error);
+                    throw error;
+                }
+            };
+
+            export const createTicket = async (clientId, subject, description) => {
+                try {
+                    const response = await api.post(`/api/v1/tickets/create`, { clientId, subject, description }, { headers: getAuthHeaders() });
+                    return response.data;
+                }
+                catch (error) {
+                    console.error('Error creating ticket:', error);
+                    throw error;
+                }
+            };
+
+            
             
 
         

@@ -1,5 +1,7 @@
 package com.astraflow.project.service;
 
+import com.astraflow.project.dto.request.SupportTicketRequest;
+import com.astraflow.project.dto.response.SupportTicketResponse;
 import com.astraflow.project.model.SupportTicket;
 import com.astraflow.project.model.enums.TicketPriority;
 import com.astraflow.project.model.enums.TicketStatus;
@@ -29,4 +31,23 @@ public interface SupportTicketService {
     SupportTicket update(UUID id, SupportTicket ticket);
 
     void deleteById(UUID id);
+    
+    List<SupportTicketResponse> fetchAll();
+
+    Optional<SupportTicketResponse> fetchById(UUID id);
+
+    List<SupportTicketResponse> fetchByTenantId(UUID tenantId);
+
+    List<SupportTicketResponse> fetchByClientId(UUID clientId);
+
+    List<SupportTicketResponse> fetchByAdminId(UUID adminId);
+
+    List<SupportTicketResponse> fetchByTenantIdAndStatus(UUID tenantId, TicketStatus status);
+
+    List<SupportTicketResponse> fetchByTenantIdAndPriority(UUID tenantId, TicketPriority priority);
+    
+    SupportTicketResponse create(SupportTicketRequest request);
+
+    SupportTicketResponse change(UUID id, SupportTicketRequest request);
+    
 }

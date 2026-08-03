@@ -3,7 +3,10 @@ package com.astraflow.project.model;
 import com.astraflow.project.model.enums.TicketPriority;
 import com.astraflow.project.model.enums.TicketStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,8 +23,6 @@ import java.util.UUID;
                 @Index(name = "idx_ticket_status", columnList = "status")
         }
 )
-@Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -145,6 +146,71 @@ public class SupportTicket {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	public static Builder builder() {
+	    return new Builder();
+	}
+
+	public static class Builder {
+
+	    private Tenant tenant;
+	    private Client client;
+	    private Admin admin;
+	    private String subject;
+	    private String message;
+	    private TicketStatus status;
+	    private TicketPriority priority;
+
+	    public Builder tenant(Tenant tenant) {
+	        this.tenant = tenant;
+	        return this;
+	    }
+
+	    public Builder client(Client client) {
+	        this.client = client;
+	        return this;
+	    }
+
+	    public Builder admin(Admin admin) {
+	        this.admin = admin;
+	        return this;
+	    }
+
+	    public Builder subject(String subject) {
+	        this.subject = subject;
+	        return this;
+	    }
+
+	    public Builder message(String message) {
+	        this.message = message;
+	        return this;
+	    }
+
+	    public Builder status(TicketStatus status) {
+	        this.status = status;
+	        return this;
+	    }
+
+	    public Builder priority(TicketPriority priority) {
+	        this.priority = priority;
+	        return this;
+	    }
+
+	    public SupportTicket build() {
+	        SupportTicket ticket = new SupportTicket();
+
+	        ticket.setTenant(tenant);
+	        ticket.setClient(client);
+	        ticket.setAdmin(admin);
+	        ticket.setSubject(subject);
+	        ticket.setMessage(message);
+	        ticket.setStatus(status);
+	        ticket.setPriority(priority);
+
+	        return ticket;
+	    }
+	}
+	
     
     
     
