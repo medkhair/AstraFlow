@@ -220,6 +220,7 @@
 .topbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   padding: 0 24px;
   height: 66px;
@@ -290,8 +291,11 @@
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: flex-end;
+  gap: 12px;
   margin-left: auto;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .topbar-clock {
@@ -318,6 +322,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .user-avatar {
@@ -339,6 +344,7 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
+  min-width: 0;
 }
 
 .user-name {
@@ -366,6 +372,53 @@
 .signout-btn:hover {
   border-color: rgba(239, 68, 68, 0.4);
   color: #f87171;
+}
+
+.support-outlet-btn {
+  padding: 10px 16px;
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.22), rgba(124, 58, 237, 0.12));
+  border: 1px solid var(--accent-border);
+  color: #ede9fe;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: background var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.support-outlet-btn:hover {
+  background: rgba(124, 58, 237, 0.28);
+  color: #ede9fe;
+  transform: translateY(-1px);
+}
+
+/* ---------- Home body layout ---------- */
+
+.tv-app-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  overflow: hidden;
+}
+
+.home-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-search {
+  max-width: 460px;
+  width: 100%;
+}
+
+.home-clock {
+  justify-self: end;
 }
 
 /* ---------- Category Nav ---------- */
@@ -625,6 +678,215 @@
   font-size: 15px;
   max-width: 340px;
   line-height: 1.6;
+}
+
+/* ============================================================
+   SUPPORT TICKETS PAGE
+   ============================================================ */
+
+.support-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.support-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-kicker {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.support-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: var(--text);
+}
+
+.support-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ghost-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ghost-btn:hover {
+  border-color: var(--accent-border);
+  color: #ddd6fe;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: 18px;
+}
+
+.support-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.support-card h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.support-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.support-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.support-field span {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.support-field input,
+.support-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  resize: vertical;
+  font: inherit;
+}
+
+.support-field input:focus,
+.support-field textarea:focus {
+  outline: none;
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.support-submit-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.support-submit-btn:hover:not(:disabled) {
+  background: #6d28d9;
+}
+
+.support-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.support-error {
+  margin: 0;
+  color: #fca5a5;
+  font-size: 13px;
+}
+
+.support-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.support-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.support-ticket-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.support-ticket-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.support-ticket-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-soft);
+  color: #c4b5fd;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.support-ticket-date {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.support-ticket-item h3 {
+  margin: 0 0 6px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.support-ticket-item p {
+  margin: 0;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .support-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* ============================================================

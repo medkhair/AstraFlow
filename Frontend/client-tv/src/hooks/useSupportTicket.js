@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchTickets, createTicket } from '../data/crud';
+import { fetchTickets, createTicket, tenantId } from '../data/crud';
 import { useAuth } from './useAuthentication';
 
 export function useSupportTicket() {
@@ -8,8 +8,8 @@ export function useSupportTicket() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const clientId = user?.id ?? localStorage.getItem('clientId');
-  const tenantId = user?.tenantId ?? localStorage.getItem('tenantId');
+  const clientId = localStorage.getItem('clientId');
+  const tenantId = localStorage.getItem('tenantId');
 
   const loadTickets = async (targetClientId = clientId) => {
     if (!targetClientId) {

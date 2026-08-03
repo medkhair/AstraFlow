@@ -349,7 +349,16 @@ import axios from 'axios';
 
             export const createTicket = async (tenantId,clientId, subject, message) => {
                 try {
-                    const response = await api.post(`/api/v1/support-tickets/dto`, { tenantId,clientId, subject, message }, { headers: getAuthHeaders() });
+                    const response = await api.post(
+                        `/api/v1/support-tickets/dto`,
+                        {
+                            tenantId: localStorage.getItem('tenantId') || '',
+                            clientId,
+                            subject,
+                            message,
+                        },
+                        { headers: getAuthHeaders() }
+                    );
                     return response.data;
                 }
                 catch (error) {

@@ -3,7 +3,7 @@ import { useChannels } from "../hooks/useChannels";
 import { useChannelCategories } from "../hooks/useChannelCategories";
 import { ChannelCard } from "../components/ChannelCard";
 
-export function Home({ user, favorites, toggleFavorite, onLogout }) {
+export function Home({ user, favorites, toggleFavorite }) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -37,57 +37,9 @@ export function Home({ user, favorites, toggleFavorite, onLogout }) {
     });
 
   return (
-    <div className="tv-app">
-      {/* Top Bar */}
-      <header className="topbar">
-        <div className="topbar-brand">
-          <svg
-            className="brand-icon"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              x="5"
-              y="10"
-              width="22"
-              height="14"
-              rx="3"
-              fill="#7c3aed"
-              opacity="0.2"
-            />
-            <rect
-              x="5"
-              y="10"
-              width="22"
-              height="14"
-              rx="3"
-              stroke="#7c3aed"
-              strokeWidth="1.5"
-            />
-            <rect
-              x="2"
-              y="6"
-              width="22"
-              height="14"
-              rx="3"
-              fill="#7c3aed"
-              opacity="0.4"
-            />
-            <rect
-              x="2"
-              y="6"
-              width="22"
-              height="14"
-              rx="3"
-              stroke="#a855f7"
-              strokeWidth="1.5"
-            />
-          </svg>
-          <span className="brand-name">AstraFlow</span>
-        </div>
-
-        <div className="topbar-search">
+    <div className="tv-app-body">
+      <div className="home-toolbar">
+        <div className="topbar-search home-search">
           <svg viewBox="0 0 20 20" fill="currentColor" className="search-icon">
             <path
               fillRule="evenodd"
@@ -104,23 +56,11 @@ export function Home({ user, favorites, toggleFavorite, onLogout }) {
           />
         </div>
 
-        <div className="topbar-right">
-          <div className="topbar-clock">
-            <span className="clock-time">{formatTime(currentTime)}</span>
-            <span className="clock-date">{formatDate(currentTime)}</span>
-          </div>
-          <div className="topbar-user">
-            <div className="user-avatar">{(user?.full_name ?? user?.username ?? "?")[0]}</div>
-            <div className="user-info">
-              <span className="user-name">{user?.full_name ?? user?.username}</span>
-              <span className="user-plan">{user?.subscription?.plan}</span>
-            </div>
-          </div>
-          <button className="signout-btn" onClick={onLogout}>
-            Sign Out
-          </button>
+        <div className="topbar-clock home-clock">
+          <span className="clock-time">{formatTime(currentTime)}</span>
+          <span className="clock-date">{formatDate(currentTime)}</span>
         </div>
-      </header>
+      </div>
 
       {/* Category Tabs */}
       <nav className="category-nav">
