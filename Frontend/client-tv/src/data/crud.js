@@ -338,7 +338,7 @@ import axios from 'axios';
 
             export const fetchTickets = async (clientId) => {
                 try {
-                    const response = await api.get(`/api/v1/tickets/client/${clientId}/all`, { headers: getAuthHeaders() });
+                    const response = await api.get(`/api/v1/support-tickets/dto/client/${clientId}`, { headers: getAuthHeaders() });
                     return response.data;
                 }
                 catch (error) {
@@ -347,9 +347,9 @@ import axios from 'axios';
                 }
             };
 
-            export const createTicket = async (clientId, subject, description) => {
+            export const createTicket = async (tenantId,clientId, subject, message) => {
                 try {
-                    const response = await api.post(`/api/v1/tickets/create`, { clientId, subject, description }, { headers: getAuthHeaders() });
+                    const response = await api.post(`/api/v1/support-tickets/dto`, { tenantId,clientId, subject, message }, { headers: getAuthHeaders() });
                     return response.data;
                 }
                 catch (error) {
