@@ -82,5 +82,7 @@ public class SubscriptionController {
     public ResponseEntity<List<SubscriptionResponse>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(subscriptionService.findByTenantIdResponses(tenantId));
     }
+    
+    
 
 }

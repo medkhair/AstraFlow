@@ -297,75 +297,88 @@ import axios from 'axios';
                 }
             };
 
+        /* client subscription */
 
-        /* Favorite Channels */
-
-            export const fetchFavoriteChannels = async (clientId) => {
+            export const fetchClientSubscription = async (clientId) => {
                 try {
-                    const response = await api.get(`/api/v1/favorites/client/${clientId}/all`, { headers: getAuthHeaders() });
+                    const response = await api.get(`/api/v1/subscriptions/client/${clientId}`, { headers: getAuthHeaders() });
                     return response.data;
                 }
                 catch (error) {
-                    console.error('Error fetching favorite channels:', error);
+                    console.error('Error fetching client subscription:', error);
                     throw error;
                 }
             };
 
-            export const addFavoriteChannel = async (clientId, channelId) => {
-                try {
-                    const response = await api.post(`/api/v1/favorites/create`, { clientId, channelId }, { headers: getAuthHeaders() });
-                    return response.data;
-                }
-                catch (error) {
-                    console.error('Error adding favorite channel:', error);
-                    throw error;
-                }
-            };
 
-            export const removeFavoriteChannel = async (favoriteId) => {
-                try {
-                    const response = await api.delete(`/api/v1/favorites/${favoriteId}`, { headers: getAuthHeaders() });
-                    return response.data;
-                }
-                catch (error) {
-                    console.error('Error removing favorite channel:', error);
-                    throw error;
-                }
-            };
+    /* Favorite Channels */
+
+        export const fetchFavoriteChannels = async (clientId) => {
+            try {
+                const response = await api.get(`/api/v1/favorites/client/${clientId}/all`, { headers: getAuthHeaders() });
+                return response.data;
+            }
+            catch (error) {
+                console.error('Error fetching favorite channels:', error);
+                throw error;
+            }
+        };
+
+        export const addFavoriteChannel = async (clientId, channelId) => {
+            try {
+                const response = await api.post(`/api/v1/favorites/create`, { clientId, channelId }, { headers: getAuthHeaders() });
+                return response.data;
+            }
+            catch (error) {
+                console.error('Error adding favorite channel:', error);
+                throw error;
+            }
+        };
+
+        export const removeFavoriteChannel = async (favoriteId) => {
+            try {
+                const response = await api.delete(`/api/v1/favorites/${favoriteId}`, { headers: getAuthHeaders() });
+                return response.data;
+            }
+            catch (error) {
+                console.error('Error removing favorite channel:', error);
+                throw error;
+            }
+        };
 
     
-        /* Tickets */
+    /* Tickets */
 
-            export const fetchTickets = async (clientId) => {
-                try {
-                    const response = await api.get(`/api/v1/support-tickets/dto/client/${clientId}`, { headers: getAuthHeaders() });
-                    return response.data;
-                }
-                catch (error) {
-                    console.error('Error fetching tickets:', error);
-                    throw error;
-                }
-            };
+        export const fetchTickets = async (clientId) => {
+            try {
+                const response = await api.get(`/api/v1/support-tickets/dto/client/${clientId}`, { headers: getAuthHeaders() });
+                return response.data;
+            }
+            catch (error) {
+                console.error('Error fetching tickets:', error);
+                throw error;
+            }
+        };
 
-            export const createTicket = async (tenantId,clientId, subject, message) => {
-                try {
-                    const response = await api.post(
-                        `/api/v1/support-tickets/dto`,
-                        {
-                            tenantId: localStorage.getItem('tenantId') || '',
-                            clientId,
-                            subject,
-                            message,
-                        },
-                        { headers: getAuthHeaders() }
-                    );
-                    return response.data;
-                }
-                catch (error) {
-                    console.error('Error creating ticket:', error);
-                    throw error;
-                }
-            };
+        export const createTicket = async (tenantId,clientId, subject, message) => {
+            try {
+                const response = await api.post(
+                    `/api/v1/support-tickets/dto`,
+                    {
+                        tenantId: localStorage.getItem('tenantId') || '',
+                        clientId,
+                        subject,
+                        message,
+                    },
+                    { headers: getAuthHeaders() }
+                );
+                return response.data;
+            }
+            catch (error) {
+                console.error('Error creating ticket:', error);
+                throw error;
+            }
+        };
 
             
             
