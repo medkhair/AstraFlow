@@ -81,7 +81,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/landing-page" element={<LandingPage />} />
+          <Route path="/optin" element={<LandingPage />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
