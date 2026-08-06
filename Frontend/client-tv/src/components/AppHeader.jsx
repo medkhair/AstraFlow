@@ -50,18 +50,20 @@ export function AppHeader({ search, setSearch }) {
   return (
     <header className="topbar">
       <div className="topbar-brand">
-        <svg
-          className="brand-icon"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect x="5" y="10" width="22" height="14" rx="3" fill="#7c3aed" opacity="0.2" />
-          <rect x="5" y="10" width="22" height="14" rx="3" stroke="#7c3aed" strokeWidth="1.5" />
-          <rect x="2" y="6" width="22" height="14" rx="3" fill="#7c3aed" opacity="0.4" />
-          <rect x="2" y="6" width="22" height="14" rx="3" stroke="#a855f7" strokeWidth="1.5" />
-        </svg>
-        <span className="brand-name">AstraFlow</span>
+        <Link to="/" className="brand-link">
+            <svg
+            className="brand-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            >
+            <rect x="5" y="10" width="22" height="14" rx="3" fill="#7c3aed" opacity="0.2" />
+            <rect x="5" y="10" width="22" height="14" rx="3" stroke="#7c3aed" strokeWidth="1.5" />
+            <rect x="2" y="6" width="22" height="14" rx="3" fill="#7c3aed" opacity="0.4" />
+            <rect x="2" y="6" width="22" height="14" rx="3" stroke="#a855f7" strokeWidth="1.5" />
+            </svg>
+            <span className="brand-name">AstraFlow</span>
+        </Link>
       </div>
 
       <div className="topbar-search">

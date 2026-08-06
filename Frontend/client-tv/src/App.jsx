@@ -5,6 +5,7 @@ import { ProtectedRoute } from './routes/ProtectedRoute'
 import { WaitForAccessRoute } from './routes/WaitForAccessRoute'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
+import { LandingPage } from './pages/LandingPage'
 import { Home } from './pages/Home'
 import { PlayerPage } from './pages/Player'
 import { ChoosePlan } from './pages/ChoosePlan'
@@ -75,6 +76,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/landing-page" element={<LandingPage />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
