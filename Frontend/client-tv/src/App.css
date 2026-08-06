@@ -421,6 +421,36 @@
 .user-plan {
   font-size: 11px;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subscription-detail-list {
+  display: grid;
+  gap: 10px;
+}
+
+.subscription-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.subscription-detail-row span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.subscription-detail-row strong {
+  color: var(--text);
+  font-size: 13px;
+  text-align: right;
 }
 
 .signout-btn {
