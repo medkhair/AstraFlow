@@ -132,6 +132,21 @@ public class Payment {
     public static Builder builder() {
         return new Builder();
     }
+    
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", currency='" + currency + '\'' +
+                ", method=" + method +
+                ", status=" + status +
+                ", transactionId='" + transactionId + '\'' +
+                ", paidAt=" + paidAt +
+                ", tenantId=" + (tenant != null ? tenant.getId() : null) +
+                ", subscriptionId=" + (subscription != null ? subscription.getId() : null) +
+                '}';
+    }
 
     public static final class Builder {
         private UUID id;
@@ -142,20 +157,58 @@ public class Payment {
         private PaymentStatus status;
         private String transactionId;
         private LocalDateTime paidAt;
+        private Tenant tenant;
 
         private Builder() {}
 
-        public Builder id(UUID id) { this.id = id; return this; }
-        public Builder subscription(Subscription subscription) { this.subscription = subscription; return this; }
-        public Builder amount(BigDecimal amount) { this.amount = amount; return this; }
-        public Builder currency(String currency) { this.currency = currency; return this; }
-        public Builder method(PaymentMethod method) { this.method = method; return this; }
-        public Builder status(PaymentStatus status) { this.status = status; return this; }
-        public Builder transactionId(String transactionId) { this.transactionId = transactionId; return this; }
-        public Builder paidAt(LocalDateTime paidAt) { this.paidAt = paidAt; return this; }
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder subscription(Subscription subscription) {
+            this.subscription = subscription;
+            return this;
+        }
+
+        public Builder amount(BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder currency(String currency) {
+            this.currency = currency;
+            return this;
+        }
+
+        public Builder method(PaymentMethod method) {
+            this.method = method;
+            return this;
+        }
+
+        public Builder status(PaymentStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder paidAt(LocalDateTime paidAt) {
+            this.paidAt = paidAt;
+            return this;
+        }
+
+        public Builder tenant(Tenant tenant) {
+            this.tenant = tenant;
+            return this;
+        }
 
         public Payment build() {
             Payment payment = new Payment();
+
             payment.id = this.id;
             payment.subscription = this.subscription;
             payment.amount = this.amount;
@@ -164,6 +217,8 @@ public class Payment {
             payment.status = this.status;
             payment.transactionId = this.transactionId;
             payment.paidAt = this.paidAt;
+            payment.tenant = this.tenant;
+
             return payment;
         }
     }

@@ -52,6 +52,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public Subscription save(Subscription subscription) {
+    	subscription.setTenant(subscription.getClient().getTenant());
         return subscriptionRepository.save(subscription);
     }
 

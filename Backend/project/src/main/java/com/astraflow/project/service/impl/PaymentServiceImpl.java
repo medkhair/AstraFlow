@@ -71,7 +71,35 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public List<PaymentResponse> findByTenantId(UUID tenantId) {
-        return paymentRepository.findByTenantId(tenantId).stream().map(PaymentMapper::toPaymentResponse).toList();
+        System.out.println("Finding payments for tenantId: " + tenantId);
+        System.out.println("Payments found: " + paymentRepository.findByTenantId(tenantId));
+        for (Payment payment : paymentRepository.findByTenantId(tenantId)) {
+
+
+                System.out.println(
+                    "Payment: " +
+                    payment.toString()
+                );
+        }
+        return paymentRepository.findByTenantId(tenantId).stream()
+                .map(PaymentMapper::toResponse)
+                .toList();
+                
+   /* 	
+    	List<PaymentResponse> responses = paymentRepository.findByTenantId(tenantId)
+    	        .stream()
+    	        .map(PaymentMapper::toResponse)
+    	        .toList();
+
+    	for (PaymentResponse response : responses) {
+    	    System.out.println("ID: " + response.getId());
+    	    System.out.println("Amount: " + response.getAmount());
+    	    System.out.println("Status: " + response.getStatus());
+    	}
+
+    	return responses;
+    	
+    	*/
     }
 
 
