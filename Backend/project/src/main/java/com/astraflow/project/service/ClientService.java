@@ -40,4 +40,6 @@ public interface ClientService {
     List<ClientResponse> findAllResponses();
 
     List<ClientResponse> findByTenantIdResponses(UUID tenantId);
+
+	void changePassword(UUID id, String string, String string2);
 }

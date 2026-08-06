@@ -239,4 +239,17 @@ public class ClientServiceImpl implements ClientService {
                 .map(clientMapper::toResponse)
                 .toList();
     }
+
+	@Override
+	public void changePassword(UUID id,  String currentPassword, String newPassword) {
+		BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+        if (!encoder.matches(currentPassword, client.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        client.setPassword(encoder.encode(newPassword));
+        clientRepository.save(client);
+		
+	}
 }

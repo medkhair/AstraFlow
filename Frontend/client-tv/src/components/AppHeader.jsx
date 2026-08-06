@@ -103,7 +103,7 @@ export function AppHeader({ search, setSearch }) {
           </button>
 
           <div className={`topbar-user-menu ${menuOpen ? 'visible' : ''}`}>
-            <Link to="/" onClick={() => setMenuOpen(false)}>Profile</Link>
+            <Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>
             <Link to="/support-tickets" onClick={() => setMenuOpen(false)}>Support Ticket</Link>
             <Link to="/subscription" onClick={() => setMenuOpen(false)}>Subscription</Link>
             <Link to="/" onClick={() => setMenuOpen(false)}>Settings</Link>

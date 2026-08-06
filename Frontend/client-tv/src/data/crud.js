@@ -110,7 +110,7 @@ import axios from 'axios';
     const setTenantId = async () => {
         try {
             const admin = await getClientById(localStorage.getItem('clientId'));
-            localStorage.setItem('tenantId', admin?.tenant?.id || '');
+            localStorage.setItem('tenantId', admin?.tenantId || '');
             return admin?.tenant?.id || null;
         } catch (error) {
             console.error('Error fetching tenant ID:', error);

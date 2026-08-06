@@ -31,8 +31,8 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> findById(@PathVariable UUID id) {
-        return clientService.findById(id)
+    public ResponseEntity<ClientResponse> findById(@PathVariable UUID id) {
+        return clientService.findResponseById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -88,5 +88,13 @@ public class ClientController {
     @GetMapping("/{clientId}/email-verified")
     public ResponseEntity<@Nullable Object> isEmailVerified(@PathVariable UUID clientId) {
         return ResponseEntity.ok(clientService.isEmailVerified(clientId));
+    }
+    
+    @PatchMapping("/{id}/change-password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable UUID id,
+            @RequestBody Map<String, String> body) {
+    	clientService.changePassword(id, body.get("currentPassword"), body.get("newPassword"));
+        return ResponseEntity.ok().build();
     }
 }

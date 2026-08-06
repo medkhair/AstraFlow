@@ -12,6 +12,7 @@ import { ChoosePlan } from './pages/ChoosePlan'
 import { CheckOut } from './pages/CheckOut'
 import { SupportTicketsPage } from './pages/SupportTickets'
 import { SubscriptionPage } from './pages/SubscriptionPage'
+import { ProfilePage } from './pages/ProfilePage'
 import { AppHeader } from './components/AppHeader'
 import { defaultFavorites } from './data/data'
 import { useFavorite } from './hooks/useFavorite'
@@ -55,6 +56,10 @@ function MainContent() {
         <Route
           path="/subscription"
           element={<SubscriptionPage />}
+        />
+        <Route
+          path="/profile"
+          element={<ProfilePage />}
         />
         <Route
           path="/player/:channelId"
