@@ -22,11 +22,13 @@ public class TenantController {
     private TenantService tenantService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Tenant>> findAll() {
         return ResponseEntity.ok(tenantService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #id)")
     public ResponseEntity<Tenant> findById(@PathVariable UUID id) {
         return tenantService.findById(id)
                 .map(ResponseEntity::ok)
@@ -34,6 +36,7 @@ public class TenantController {
     }
 
     @GetMapping("/subdomain/{subdomain}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN', 'CLIENT')")
     public ResponseEntity<Tenant> findBySubdomain(@PathVariable String subdomain) {
         return tenantService.findBySubdomain(subdomain)
                 .map(ResponseEntity::ok)
@@ -41,21 +44,25 @@ public class TenantController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Tenant>> findByStatus(@PathVariable TenantStatus status) {
         return ResponseEntity.ok(tenantService.findByStatus(status));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Tenant> create(@RequestBody Tenant tenant) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tenantService.save(tenant));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageTenant(authentication, #id)")
     public ResponseEntity<Tenant> update(@PathVariable UUID id, @RequestBody Tenant tenant) {
         return ResponseEntity.ok(tenantService.update(id, tenant));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         tenantService.deleteById(id);
         return ResponseEntity.noContent().build();

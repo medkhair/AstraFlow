@@ -26,6 +26,7 @@ public class M3uImportController {
     private M3uImportService m3uImportService;
 
     @PostMapping("/import")
+    @PreAuthorize("@authorizationService.canManageTenant(authentication, #tenantId)")
     public ResponseEntity<?> importFromUrl(
             @RequestParam String url,
             @RequestParam UUID tenantId) {
@@ -49,6 +50,7 @@ public class M3uImportController {
     }
 
     @PostMapping(value = "/import/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("@authorizationService.canManageTenant(authentication, #tenantId)")
     public ResponseEntity<?> importFromFile(
             @RequestParam MultipartFile file,
             @RequestParam UUID tenantId) {

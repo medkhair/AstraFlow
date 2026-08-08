@@ -30,6 +30,7 @@ public class SupportTicketController {
     // =========================================================
 
     @GetMapping
+        @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<SupportTicket>> findAll() {
         return ResponseEntity.ok(
                 supportTicketService.findAll()
@@ -67,6 +68,7 @@ public class SupportTicketController {
     }
 
     @GetMapping("/admin/{adminId}")
+        @PreAuthorize("@authorizationService.canAccessUser(authentication, #adminId)")
     public ResponseEntity<List<SupportTicket>> findByAdminId(
             @PathVariable UUID adminId
     ) {
@@ -76,6 +78,7 @@ public class SupportTicketController {
     }
 
     @GetMapping("/tenant/{tenantId}/status/{status}")
+        @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SupportTicket>> findByTenantIdAndStatus(
             @PathVariable UUID tenantId,
             @PathVariable TicketStatus status
@@ -89,6 +92,7 @@ public class SupportTicketController {
     }
 
     @GetMapping("/tenant/{tenantId}/priority/{priority}")
+        @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SupportTicket>> findByTenantIdAndPriority(
             @PathVariable UUID tenantId,
             @PathVariable TicketPriority priority
@@ -142,6 +146,7 @@ public class SupportTicketController {
      * POST /api/v1/support-tickets/dto
      */
     @PostMapping("/dto")
+    @PreAuthorize("@authorizationService.canCreateTicket(authentication, #request)")
     public ResponseEntity<SupportTicketResponse> createDto(
             @RequestBody SupportTicketRequest request
     ) {
@@ -158,6 +163,7 @@ public class SupportTicketController {
      * PUT /api/v1/support-tickets/dto/{id}
      */
     @PutMapping("/dto/{id}")
+        @PreAuthorize("@authorizationService.canManageTicket(authentication, #id)")
     public ResponseEntity<SupportTicketResponse> changeDto(
             @PathVariable UUID id,
             @RequestBody SupportTicketRequest request
@@ -175,6 +181,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto
      */
     @GetMapping("/dto")
+        @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<SupportTicketResponse>> fetchAllDto() {
 
         return ResponseEntity.ok(
@@ -206,6 +213,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto/tenant/{tenantId}
      */
     @GetMapping("/dto/tenant/{tenantId}")
+        @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SupportTicketResponse>> fetchByTenantIdDto(
             @PathVariable UUID tenantId
     ) {
@@ -222,6 +230,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto/client/{clientId}
      */
     @GetMapping("/dto/client/{clientId}")
+        @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<List<SupportTicketResponse>> fetchByClientIdDto(
             @PathVariable UUID clientId
     ) {
@@ -238,6 +247,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto/admin/{adminId}
      */
     @GetMapping("/dto/admin/{adminId}")
+        @PreAuthorize("@authorizationService.canAccessUser(authentication, #adminId)")
     public ResponseEntity<List<SupportTicketResponse>> fetchByAdminIdDto(
             @PathVariable UUID adminId
     ) {
@@ -254,6 +264,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto/tenant/{tenantId}/status/{status}
      */
     @GetMapping("/dto/tenant/{tenantId}/status/{status}")
+        @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SupportTicketResponse>> fetchByTenantIdAndStatusDto(
             @PathVariable UUID tenantId,
             @PathVariable TicketStatus status
@@ -274,6 +285,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto/tenant/{tenantId}/priority/{priority}
      */
     @GetMapping("/dto/tenant/{tenantId}/priority/{priority}")
+        @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SupportTicketResponse>> fetchByTenantIdAndPriorityDto(
             @PathVariable UUID tenantId,
             @PathVariable TicketPriority priority

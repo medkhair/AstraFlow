@@ -20,6 +20,7 @@ public class BrandingController {
     private BrandingService brandingService;
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessBranding(authentication, #id)")
     public ResponseEntity<Branding> findById(@PathVariable UUID id) {
         return brandingService.findById(id)
                 .map(ResponseEntity::ok)
@@ -27,6 +28,7 @@ public class BrandingController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<Branding> findByTenantId(@PathVariable UUID tenantId) {
         return brandingService.findByTenantId(tenantId)
                 .map(ResponseEntity::ok)
@@ -34,16 +36,19 @@ public class BrandingController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canManageTenant(authentication, #branding.tenant.id)")
     public ResponseEntity<Branding> create(@RequestBody Branding branding) {
         return ResponseEntity.status(HttpStatus.CREATED).body(brandingService.save(branding));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageBranding(authentication, #id)")
     public ResponseEntity<Branding> update(@PathVariable UUID id, @RequestBody Branding branding) {
         return ResponseEntity.ok(brandingService.update(id, branding));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageBranding(authentication, #id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         brandingService.deleteById(id);
         return ResponseEntity.noContent().build();

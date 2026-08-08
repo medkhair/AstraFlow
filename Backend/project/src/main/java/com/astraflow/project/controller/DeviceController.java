@@ -22,6 +22,7 @@ public class DeviceController {
     private DeviceService deviceService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Device>> findAll() {
         return ResponseEntity.ok(deviceService.findAll());
     }

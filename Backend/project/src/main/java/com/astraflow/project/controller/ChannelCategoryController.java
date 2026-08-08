@@ -21,11 +21,13 @@ public class ChannelCategoryController {
     private ChannelCategoryService channelCategoryService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<ChannelCategory>> findAll() {
         return ResponseEntity.ok(channelCategoryService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessCategory(authentication, #id)")
     public ResponseEntity<ChannelCategory> findById(@PathVariable UUID id) {
         return channelCategoryService.findById(id)
                 .map(ResponseEntity::ok)
@@ -33,21 +35,25 @@ public class ChannelCategoryController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<ChannelCategory>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(channelCategoryService.findByTenantId(tenantId));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canManageTenant(authentication, #category.tenant.id)")
     public ResponseEntity<ChannelCategory> create(@RequestBody ChannelCategory category) {
         return ResponseEntity.status(HttpStatus.CREATED).body(channelCategoryService.save(category));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageCategory(authentication, #id)")
     public ResponseEntity<ChannelCategory> update(@PathVariable UUID id, @RequestBody ChannelCategory category) {
         return ResponseEntity.ok(channelCategoryService.update(id, category));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageCategory(authentication, #id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         channelCategoryService.deleteById(id);
         return ResponseEntity.noContent().build();

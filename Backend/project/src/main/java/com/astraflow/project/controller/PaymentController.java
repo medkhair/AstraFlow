@@ -23,6 +23,7 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Payment>> findAll() {
         return ResponseEntity.ok(paymentService.findAll());
     }
@@ -36,11 +37,13 @@ public class PaymentController {
     }
 
     @GetMapping("/subscription/{subscriptionId}")
+    @PreAuthorize("@authorizationService.canAccessSubscription(authentication, #subscriptionId)")
     public ResponseEntity<List<Payment>> findBySubscriptionId(@PathVariable UUID subscriptionId) {
         return ResponseEntity.ok(paymentService.findBySubscriptionId(subscriptionId));
     }
 
     @GetMapping("/transaction/{transactionId}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<Payment> findByTransactionId(@PathVariable String transactionId) {
         return paymentService.findByTransactionId(transactionId)
                 .map(ResponseEntity::ok)
@@ -48,6 +51,7 @@ public class PaymentController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<List<Payment>> findByStatus(@PathVariable PaymentStatus status) {
         return ResponseEntity.ok(paymentService.findByStatus(status));
     }

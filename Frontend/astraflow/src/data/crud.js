@@ -24,7 +24,7 @@ import axios from 'axios';
             return Promise.reject(error);
         }
     );
-    
+
     // login and token management
     export const login = async (username, password) => {
         try {
@@ -158,7 +158,7 @@ import axios from 'axios';
 
     /* Channels */
 
-        export const getChannels = () => fetchData('/api/v1/channels');
+        export const getChannels = () => fetchData('/api/v1/channels/tenant/' + tenantId);
 
         export const createChannel = (channelData) => createData('/api/v1/channels', channelData);
 
@@ -170,7 +170,7 @@ import axios from 'axios';
 
     /* ChannelCategories */
 
-        export const getChannelCategories = () => fetchData('/api/v1/channel-categories');
+        export const getChannelCategories = () => fetchData('/api/v1/channel-categories/tenant/' + tenantId);
 
         export const createChannelCategory = (categoryData) => createData('/api/v1/channel-categories', categoryData);
 
@@ -201,7 +201,7 @@ import axios from 'axios';
     
     /* Plans */
         
-        export const getPlans = () => fetchData('/api/v1/plans');
+        export const getPlans = () => fetchData('/api/v1/plans/tenant/' + tenantId);
 
         export const createPlan = (planData) => createData('/api/v1/plans', planData);
 
@@ -226,7 +226,7 @@ import axios from 'axios';
 
     /* Support Tickets */
 
-        export const getSupportTickets = () => fetchData('/api/v1/support-tickets');
+        export const getSupportTickets = () => fetchData('/api/v1/support-tickets/tenant/' + tenantId);
 
         export const createSupportTicket = (ticketData) => createData('/api/v1/support-tickets', ticketData);
 

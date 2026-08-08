@@ -25,11 +25,13 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Admin>> findAll() {
         return ResponseEntity.ok(adminService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canAccessUser(authentication, #id)")
     public ResponseEntity<Admin> findById(@PathVariable UUID id) {
         return adminService.findById(id)
                 .map(ResponseEntity::ok)
@@ -37,11 +39,13 @@ public class AdminController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<Admin>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(adminService.findByTenantId(tenantId));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canManageTenant(authentication, #admin.tenant.id)")
     public ResponseEntity<Admin> create(@RequestBody Admin admin) {
     	BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
         admin.setPassword(encoder.encode(admin.getPassword()));
@@ -53,11 +57,13 @@ public class AdminController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canAccessUser(authentication, #id)")
     public ResponseEntity<Admin> update(@PathVariable UUID id, @RequestBody Admin admin) {
         return ResponseEntity.ok(adminService.update(id, admin));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canAccessUser(authentication, #id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         adminService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -70,6 +76,7 @@ public class AdminController {
     }
     
     @PatchMapping("/{id}/change-password")
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canAccessUser(authentication, #id)")
     public ResponseEntity<Void> changePassword(
             @PathVariable UUID id,
             @RequestBody Map<String, String> body) {

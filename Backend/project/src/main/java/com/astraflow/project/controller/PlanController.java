@@ -23,11 +23,13 @@ public class PlanController {
     private PlanService planService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Plan>> findAll() {
         return ResponseEntity.ok(planService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessPlan(authentication, #id)")
     public ResponseEntity<Plan> findById(@PathVariable UUID id) {
         return planService.findById(id)
                 .map(ResponseEntity::ok)
@@ -35,16 +37,19 @@ public class PlanController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<Plan>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(planService.findByTenantId(tenantId));
     }
 
     @GetMapping("/tenant/{tenantId}/active")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<Plan>> findActivePlansByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(planService.findActivePlansByTenantId(tenantId));
     }
 
     @GetMapping("/tenant/{tenantId}/type/{planType}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<Plan>> findByTenantIdAndPlanType(
             @PathVariable UUID tenantId,
             @PathVariable PlanType planType) {
@@ -52,16 +57,19 @@ public class PlanController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canManageTenant(authentication, #plan.tenant.id)")
     public ResponseEntity<Plan> create(@RequestBody Plan plan) {
         return ResponseEntity.status(HttpStatus.CREATED).body(planService.save(plan));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManagePlan(authentication, #id)")
     public ResponseEntity<Plan> update(@PathVariable UUID id, @RequestBody Plan plan) {
         return ResponseEntity.ok(planService.update(id, plan));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManagePlan(authentication, #id)")
     public ResponseEntity<?> deleteById(@PathVariable UUID id) {
         try {
             planService.deleteById(id);

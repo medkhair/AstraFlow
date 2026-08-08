@@ -22,11 +22,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<User>> findAll() {
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessUser(authentication, #id)")
     public ResponseEntity<User> findById(@PathVariable UUID id) {
         return userService.findById(id)
                 .map(ResponseEntity::ok)
@@ -34,6 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<User> findByEmail(@PathVariable String email) {
         return userService.findByEmail(email)
                 .map(ResponseEntity::ok)
@@ -41,16 +44,19 @@ public class UserController {
     }
 
     @GetMapping("/username/{username}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<User> findByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.findByUsername(username));
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<User> updateStatus(@PathVariable UUID id, @RequestParam UserStatus status) {
         return ResponseEntity.ok(userService.updateStatus(id, status));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();

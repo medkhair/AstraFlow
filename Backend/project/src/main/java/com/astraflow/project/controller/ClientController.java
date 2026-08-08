@@ -28,6 +28,7 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<ClientResponse>> findAll() {
         return ResponseEntity.ok(clientService.findAllResponses());
     }

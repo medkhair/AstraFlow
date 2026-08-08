@@ -23,11 +23,13 @@ public class SubscriptionController {
     private SubscriptionService subscriptionService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Subscription>> findAll() {
         return ResponseEntity.ok(subscriptionService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessSubscription(authentication, #id)")
     public ResponseEntity<Subscription> findById(@PathVariable UUID id) {
         return subscriptionService.findById(id)
                 .map(ResponseEntity::ok)
@@ -49,6 +51,7 @@ public class SubscriptionController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<List<Subscription>> findByStatus(@PathVariable SubscriptionStatus status) {
         return ResponseEntity.ok(subscriptionService.findByStatus(status));
     }

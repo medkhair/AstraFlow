@@ -22,11 +22,13 @@ public class OwnerController {
     private OwnerService ownerService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Owner>> findAll() {
         return ResponseEntity.ok(ownerService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Owner> findById(@PathVariable UUID id) {
         return ownerService.findById(id)
                 .map(ResponseEntity::ok)
@@ -34,6 +36,7 @@ public class OwnerController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Owner> findByEmail(@PathVariable String email) {
         return ownerService.findByEmail(email)
                 .map(ResponseEntity::ok)
@@ -41,16 +44,19 @@ public class OwnerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Owner> create(@RequestBody Owner owner) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ownerService.save(owner));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Owner> update(@PathVariable UUID id, @RequestBody Owner owner) {
         return ResponseEntity.ok(ownerService.update(id, owner));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         ownerService.deleteById(id);
         return ResponseEntity.noContent().build();

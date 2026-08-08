@@ -24,6 +24,7 @@ public class AuditLogController {
     private AuditLogService auditLogService;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<AuditLog> findById(@PathVariable UUID id) {
         return auditLogService.findById(id)
                 .map(ResponseEntity::ok)
@@ -31,6 +32,7 @@ public class AuditLogController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<Page<AuditLog>> findByTenantId(
             @PathVariable UUID tenantId,
             @PageableDefault(size = 50, sort = "createdAt") Pageable pageable) {
@@ -38,11 +40,13 @@ public class AuditLogController {
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("@authorizationService.canAccessUser(authentication, #userId)")
     public ResponseEntity<List<AuditLog>> findByUserId(@PathVariable UUID userId) {
         return ResponseEntity.ok(auditLogService.findByUserId(userId));
     }
 
     @GetMapping("/tenant/{tenantId}/entity/{entity}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<AuditLog>> findByTenantIdAndEntity(
             @PathVariable UUID tenantId,
             @PathVariable String entity) {
@@ -50,6 +54,7 @@ public class AuditLogController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<AuditLog> create(@RequestBody AuditLog auditLog) {
         return ResponseEntity.status(HttpStatus.CREATED).body(auditLogService.save(auditLog));
     }

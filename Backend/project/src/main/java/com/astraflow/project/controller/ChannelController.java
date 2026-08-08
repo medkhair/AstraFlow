@@ -22,11 +22,13 @@ public class ChannelController {
     private ChannelService channelService;
 
     @GetMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Channel>> findAll() {
         return ResponseEntity.ok(channelService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessChannel(authentication, #id)")
     public ResponseEntity<Channel> findById(@PathVariable UUID id) {
         return channelService.findById(id)
                 .map(ResponseEntity::ok)
@@ -34,11 +36,13 @@ public class ChannelController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<Channel>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(channelService.findByTenantId(tenantId));
     }
 
     @GetMapping("/tenant/{tenantId}/status/{status}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<Channel>> findByTenantIdAndStatus(
             @PathVariable UUID tenantId,
             @PathVariable ChannelStatus status) {
@@ -46,21 +50,25 @@ public class ChannelController {
     }
 
     @GetMapping("/category/{categoryId}")
+    @PreAuthorize("@authorizationService.canAccessCategory(authentication, #categoryId)")
     public ResponseEntity<List<Channel>> findByCategoryId(@PathVariable UUID categoryId) {
         return ResponseEntity.ok(channelService.findByCategoryId(categoryId));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER') or @authorizationService.canManageTenant(authentication, #channel.tenant.id)")
     public ResponseEntity<Channel> create(@RequestBody Channel channel) {
         return ResponseEntity.status(HttpStatus.CREATED).body(channelService.save(channel));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageChannel(authentication, #id)")
     public ResponseEntity<Channel> update(@PathVariable UUID id, @RequestBody Channel channel) {
         return ResponseEntity.ok(channelService.update(id, channel));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageChannel(authentication, #id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         channelService.deleteById(id);
         return ResponseEntity.noContent().build();

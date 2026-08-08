@@ -2,6 +2,8 @@ package com.astraflow.project.service;
 
 import com.astraflow.project.model.Admin;
 import com.astraflow.project.dto.request.FavoriteRequest;
+import com.astraflow.project.dto.request.SupportTicketRequest;
+
 import com.astraflow.project.model.Branding;
 import com.astraflow.project.model.Channel;
 import com.astraflow.project.model.ChannelCategory;
@@ -99,6 +101,8 @@ public class AuthorizationService {
         }
 
         if (user instanceof Admin admin) {
+        	System.out.println(" STATUS ::::>>>> "+admin.getTenant() != null && admin.getTenant().getId().equals(tenantId));
+   
             return admin.getTenant() != null && admin.getTenant().getId().equals(tenantId);
         }
 
@@ -188,6 +192,11 @@ public class AuthorizationService {
         return branding != null && canManageTenant(authentication, tenantId(branding.getTenant()));
     }
 
+    public boolean canAccessBranding(Authentication authentication, UUID brandingId) {
+        Branding branding = brandingRepository.findById(brandingId).orElse(null);
+        return branding != null && canAccessTenant(authentication, tenantId(branding.getTenant()));
+    }
+
     public boolean canAccessChannel(Authentication authentication, UUID channelId) {
         Channel channel = channelRepository.findById(channelId).orElse(null);
         return channel != null && canAccessTenant(authentication, tenantId(channel.getTenant()));
@@ -243,6 +252,11 @@ public class AuthorizationService {
         return plan != null && canManageTenant(authentication, tenantId(plan.getTenant()));
     }
 
+    public boolean canAccessPlan(Authentication authentication, UUID planId) {
+        Plan plan = planRepository.findById(planId).orElse(null);
+        return plan != null && canAccessTenant(authentication, tenantId(plan.getTenant()));
+    }
+
     public boolean canAccessSubscription(Authentication authentication, UUID subscriptionId) {
         Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
         return subscription != null && canAccessClient(authentication, clientId(subscription.getClient()));
@@ -272,6 +286,12 @@ public class AuthorizationService {
         return ticket != null
                 && ticket.getClient() != null
                 && canAccessClient(authentication, clientId(ticket.getClient()));
+    }
+
+    public boolean canCreateTicket(Authentication authentication, SupportTicketRequest ticket) {
+        return ticket != null
+                && canAccessClient(authentication, ticket.getClientId())
+                && canAccessTenant(authentication, ticket.getTenantId());
     }
 
     public boolean canAccessTicket(Authentication authentication, UUID ticketId) {
