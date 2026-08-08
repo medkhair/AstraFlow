@@ -53,6 +53,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional
     public Subscription save(Subscription subscription) {
     	subscription.setTenant(subscription.getClient().getTenant());
+        // Subscription duration and end date calculation
+        subscription.setEndDate(
+                subscription.getStartDate().plusMonths(subscription.getPlan().getDurationDays() / 30)
+        );
         return subscriptionRepository.save(subscription);
     }
 
