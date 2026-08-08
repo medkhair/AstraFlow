@@ -365,6 +365,58 @@
 }
 
 /* ============================================================
+   NOT FOUND PAGE
+   ============================================================ */
+
+.not-found-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(124, 58, 237, 0.18), transparent 26%),
+    var(--bg);
+}
+
+.not-found-card {
+  width: min(520px, 100%);
+  padding: 36px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.not-found-eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.not-found-title {
+  margin: 0;
+  color: var(--text);
+  font-size: 28px;
+}
+
+.not-found-text {
+  margin: 12px 0 20px;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.not-found-btn {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+/* ============================================================
    HOME – TV APP LAYOUT
    ============================================================ */
 

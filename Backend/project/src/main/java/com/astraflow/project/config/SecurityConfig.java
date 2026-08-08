@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,6 +22,7 @@ import com.astraflow.project.security.filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
 	@Autowired
@@ -44,7 +46,7 @@ public class SecurityConfig {
 					"/api/v1/auth/verify-email",
 					"/api/v1/auth/verify-email/*",
 					"/api/v1/clients/*/email-verified/",
-					"/api/v1/stripe/webhook"   // Stripe authenticates via HMAC signature
+					"/api/v1/stripe/webhook"   // Stripe authenticatevia HMAC signatures 
 				).permitAll()
 				.anyRequest().authenticated())
 			.httpBasic(Customizer.withDefaults())

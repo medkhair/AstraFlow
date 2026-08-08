@@ -13,6 +13,7 @@ import { CheckOut } from './pages/CheckOut'
 import { SupportTicketsPage } from './pages/SupportTickets'
 import { SubscriptionPage } from './pages/SubscriptionPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { AppHeader } from './components/AppHeader'
 import { defaultFavorites } from './data/data'
 import { useFavorite } from './hooks/useFavorite'
@@ -71,7 +72,7 @@ function MainContent() {
           }
         />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }

@@ -2,9 +2,11 @@ package com.astraflow.project.model;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserPrincipal implements UserDetails {
@@ -18,8 +20,14 @@ public class UserPrincipal implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+	    String role = switch (user) {
+	        case Owner ignored -> "ROLE_OWNER";
+	        case Admin ignored -> "ROLE_ADMIN";
+	        case Client ignored -> "ROLE_CLIENT";
+	        default -> throw new IllegalStateException("Unknown user type");
+	    };
+
+	    return List.of(new SimpleGrantedAuthority(role));
 	}
 
 	@Override
