@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/subscriptions")
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN', 'CLIENT')")
 public class SubscriptionController {
 
     @Autowired
@@ -33,11 +35,13 @@ public class SubscriptionController {
     }
 
     @GetMapping("/client/{clientId}")
+    @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<SubscriptionResponse> findByClientId(@PathVariable UUID clientId) {
         return ResponseEntity.ok(subscriptionService.findResponseByClientId(clientId));
     }
 
     @GetMapping("/client/{clientId}/active")
+    @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<Subscription> findActiveByClientId(@PathVariable UUID clientId) {
         return subscriptionService.findActiveByClientId(clientId)
                 .map(ResponseEntity::ok)
@@ -55,23 +59,27 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageSubscription(authentication, #id)")
     public ResponseEntity<Subscription> update(@PathVariable UUID id, @RequestBody Subscription subscription) {
         return ResponseEntity.ok(subscriptionService.update(id, subscription));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authorizationService.canManageSubscription(authentication, #id)")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         subscriptionService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/client/{clientId}/subscribed")
+    @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<Boolean> isClientSubscribed(@PathVariable UUID clientId) {
         boolean isSubscribed = subscriptionService.isSubscribed(clientId);
         return ResponseEntity.ok(isSubscribed);
     }
 
     @GetMapping("/client/{clientId}/active-subscription")
+    @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<Boolean> getActiveSubscription(@PathVariable UUID clientId) {
         boolean isSubscriptionActive = subscriptionService.isSubscriptionActive(clientId);
 
@@ -79,6 +87,7 @@ public class SubscriptionController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SubscriptionResponse>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(subscriptionService.findByTenantIdResponses(tenantId));
     }

@@ -19,6 +19,7 @@ import com.astraflow.project.service.UserService;
 import com.astraflow.project.service.VerificationCodeService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -36,6 +37,7 @@ public class VerificationController {
     private EmailService emailService;
 
     @PostMapping("/verify-email")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> body) {
         String code = body.get("code");
         try {
@@ -49,6 +51,7 @@ public class VerificationController {
     }
 
     @PostMapping("/resend-verification")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> resendVerificationCode(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         User user = userService.findByEmail(email)

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/payments")
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN', 'CLIENT')")
 public class PaymentController {
 
     @Autowired
@@ -26,6 +28,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessPayment(authentication, #id)")
     public ResponseEntity<Payment> findById(@PathVariable UUID id) {
         return paymentService.findById(id)
                 .map(ResponseEntity::ok)
@@ -55,17 +58,20 @@ public class PaymentController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<Payment> update(@PathVariable UUID id, @RequestBody Payment payment) {
         return ResponseEntity.ok(paymentService.update(id, payment));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         paymentService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<PaymentResponse>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(paymentService.findByTenantId(tenantId));
     }

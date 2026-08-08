@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/clients")
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN', 'CLIENT')")
 public class ClientController {
 
     @Autowired
@@ -31,6 +33,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.canAccessClient(authentication, #id)")
     public ResponseEntity<ClientResponse> findById(@PathVariable UUID id) {
         return clientService.findResponseById(id)
                 .map(ResponseEntity::ok)
@@ -38,16 +41,19 @@ public class ClientController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+    @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<ClientResponse>> findByTenantId(@PathVariable UUID tenantId) {
         return ResponseEntity.ok(clientService.findByTenantIdResponses(tenantId));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authorizationService.canModifyClient(authentication, #id)")
     public ResponseEntity<Client> update(@PathVariable UUID id, @RequestBody Client client) {
         return ResponseEntity.ok(clientService.update(id, client));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authorizationService.canModifyClient(authentication, #id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         clientService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -55,6 +61,7 @@ public class ClientController {
     
     
     @PostMapping("/register")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> register(@RequestBody Client client) {
 
         try {
@@ -69,6 +76,7 @@ public class ClientController {
     }
     
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> login(@RequestBody Client client) {
         try {
             String loggedInClient = clientService.verify(client);
@@ -86,11 +94,13 @@ public class ClientController {
     }
 
     @GetMapping("/{clientId}/email-verified")
+    @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<@Nullable Object> isEmailVerified(@PathVariable UUID clientId) {
         return ResponseEntity.ok(clientService.isEmailVerified(clientId));
     }
     
     @PatchMapping("/{id}/change-password")
+    @PreAuthorize("@authorizationService.isCurrentClient(authentication, #id) or hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<Void> changePassword(
             @PathVariable UUID id,
             @RequestBody Map<String, String> body) {

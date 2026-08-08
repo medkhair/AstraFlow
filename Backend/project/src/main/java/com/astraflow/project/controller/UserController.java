@@ -6,6 +6,7 @@ import com.astraflow.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/users")
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
 public class UserController {
 
     @Autowired
@@ -55,6 +57,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("permitAll()")
     public User register(@RequestBody User user) {
 
         BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
@@ -63,6 +66,7 @@ public class UserController {
     }
     
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public String login(@RequestBody User user) {
         return userService.verify(user);
     }

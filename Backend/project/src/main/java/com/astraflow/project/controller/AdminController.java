@@ -12,11 +12,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/admins")
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
 public class AdminController {
 
     @Autowired
@@ -62,6 +64,7 @@ public class AdminController {
     }
     
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public String login(@RequestBody Admin user) {
         return adminService.verify(user);
     }

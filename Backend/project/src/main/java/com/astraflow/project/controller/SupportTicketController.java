@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/support-tickets")
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN', 'CLIENT')")
 public class SupportTicketController {
 
     @Autowired
@@ -35,6 +37,7 @@ public class SupportTicketController {
     }
 
     @GetMapping("/{id}")
+        @PreAuthorize("@authorizationService.canAccessTicket(authentication, #id)")
     public ResponseEntity<SupportTicket> findById(
             @PathVariable UUID id
     ) {
@@ -44,6 +47,7 @@ public class SupportTicketController {
     }
 
     @GetMapping("/tenant/{tenantId}")
+        @PreAuthorize("@authorizationService.canAccessTenant(authentication, #tenantId)")
     public ResponseEntity<List<SupportTicket>> findByTenantId(
             @PathVariable UUID tenantId
     ) {
@@ -53,6 +57,7 @@ public class SupportTicketController {
     }
 
     @GetMapping("/client/{clientId}")
+        @PreAuthorize("@authorizationService.canAccessClient(authentication, #clientId)")
     public ResponseEntity<List<SupportTicket>> findByClientId(
             @PathVariable UUID clientId
     ) {
@@ -97,6 +102,7 @@ public class SupportTicketController {
     }
 
     @PostMapping
+        @PreAuthorize("@authorizationService.canCreateTicket(authentication, #ticket)")
     public ResponseEntity<SupportTicket> create(
             @RequestBody SupportTicket ticket
     ) {
@@ -106,6 +112,7 @@ public class SupportTicketController {
     }
 
     @PutMapping("/{id}")
+        @PreAuthorize("@authorizationService.canManageTicket(authentication, #id)")
     public ResponseEntity<SupportTicket> update(
             @PathVariable UUID id,
             @RequestBody SupportTicket ticket
@@ -116,6 +123,7 @@ public class SupportTicketController {
     }
 
     @DeleteMapping("/{id}")
+        @PreAuthorize("@authorizationService.canManageTicket(authentication, #id)")
     public ResponseEntity<Void> delete(
             @PathVariable UUID id
     ) {
@@ -181,6 +189,7 @@ public class SupportTicketController {
      * GET /api/v1/support-tickets/dto/{id}
      */
     @GetMapping("/dto/{id}")
+        @PreAuthorize("@authorizationService.canAccessTicket(authentication, #id)")
     public ResponseEntity<SupportTicketResponse> fetchByIdDto(
             @PathVariable UUID id
     ) {

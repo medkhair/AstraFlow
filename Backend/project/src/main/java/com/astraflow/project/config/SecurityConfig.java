@@ -43,9 +43,12 @@ public class SecurityConfig {
 					"/api/v1/admins/login",
 					"/api/v1/clients/login",
 					"/api/v1/clients/register",
+					"/api/v1/users/login",
+					"/api/v1/users/register",
 					"/api/v1/auth/verify-email",
 					"/api/v1/auth/verify-email/*",
-					"/api/v1/clients/*/email-verified/",
+					"/api/v1/auth/resend-verification",
+					"/api/v1/clients/*/email-verified",
 					"/api/v1/stripe/webhook"   // Stripe authenticatevia HMAC signatures 
 				).permitAll()
 				.anyRequest().authenticated())
